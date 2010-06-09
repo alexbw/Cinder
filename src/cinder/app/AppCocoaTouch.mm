@@ -49,6 +49,22 @@ namespace cinder { namespace app {
 		[app->mState->mCinderView startAnimation];
 	}
 	
+	void setupCocoaTouchView( CinderViewCocoaTouch *cinderView, AppCocoaTouch *app )
+	{
+		app->privatePrepareSettings__();
+
+		cinderView.mApp = app;
+		cinderView.mRenderer = app->getRenderer();
+		app->mState->mCinderView = cinderView;
+		
+		app->privateSetup__();		
+		
+		[app->mState->mCinderView startAnimation];
+		
+		
+	}
+	
+	
 } } // namespace cinder::app
 
 @interface CinderAccelerometerDelegateIPhone : NSObject <UIAccelerometerDelegate> {
@@ -126,7 +142,9 @@ namespace cinder { namespace app {
 @end
 
 
+
 namespace cinder { namespace app {
+		
 	
 	AppCocoaTouch::AppCocoaTouch()
 	: App()
@@ -135,6 +153,23 @@ namespace cinder { namespace app {
 		mState->mStartTime = ::CFAbsoluteTimeGetCurrent();
 		mLastAccel = mLastRawAccel = Vec3f::zero();
 	}
+	
+	void AppCocoaTouch::launchEmbeddedApp( CinderViewCocoaTouch *cinderView, class Renderer *renderer )
+	{
+		// QUESTIONS:
+		// Do we need to set the instance?
+
+//		sInstance = this;
+		
+		// mRenderer is private, with no setter method. 
+		// What's the best way to go about knockin' this out?
+
+//		mRenderer = shared_ptr<Renderer>( renderer );
+		
+		setupCocoaTouchView(cinderView, this);
+				
+	}
+	
 	
 	void AppCocoaTouch::launch( const char *title, int argc, char * const argv[] )
 	{

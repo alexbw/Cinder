@@ -45,6 +45,8 @@
 	
 }
 
+@property ci::app::AppCocoaTouch *mApp;
+@property ci::app::Renderer	*mRenderer;
 @property (readonly, nonatomic, getter=isAnimating) BOOL animating;
 @property (nonatomic) NSInteger animationFrameInterval;
 

@@ -27,6 +27,8 @@
 #include "cinder/app/TouchEvent.h"
 #include "cinder/app/AccelEvent.h"
 
+@class CinderViewCocoaTouch;
+
 namespace cinder { namespace app {
 	
 	struct AppCocoaTouchState;
@@ -115,6 +117,7 @@ namespace cinder { namespace app {
 		virtual void	launch( const char *title, int argc, char * const argv[] );
 		//! \endcond
 		
+		virtual void	launchEmbeddedApp( CinderViewCocoaTouch *cinderView, class Renderer *renderer );
 		
 		// DO NOT CALL - should be private but aren't for esoteric reasons
 		//! \cond
@@ -129,6 +132,7 @@ namespace cinder { namespace app {
 		
 	private:
 		friend void		setupCocoaTouchWindow( AppCocoaTouch *app );
+		friend void		setupCocoaTouchView( CinderViewCocoaTouch *cinderView, AppCocoaTouch *app );
 		
 		// The state is contained in a struct in order to avoid this .h needing to be compiled as Objective-C++
 		shared_ptr<AppCocoaTouchState>		mState;
