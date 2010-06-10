@@ -68,11 +68,13 @@
 @property (nonatomic, retain) NSTimer *animationTimer;
 - (id)initWithCoder:(NSCoder *)aDecoder;
 - (id)initWithFrame:(CGRect)frame;
+- (void)launchApp;
 - (BOOL)ableToDraw;
 - (void)startAnimation;
 - (void)layoutSubviews;
 - (void)drawView:(id)sender;
 - (void)stopAnimation;
+
 
 - (void)setApp:(ci::app::AppCocoaTouch *)app;
 - (ci::app::AppCocoaTouch *)getApp;
