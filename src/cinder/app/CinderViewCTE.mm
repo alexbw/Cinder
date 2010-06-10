@@ -95,7 +95,6 @@ static Boolean sIsEaglLayer = TRUE;
 
 - (BOOL)ableToDraw
 {
-	NSLog(@"Have app? %d Have renderer? %d", mApp != nil, mRenderer != nil);
 	return (mApp != nil) & (mRenderer != nil);
 }
 
@@ -104,8 +103,6 @@ static Boolean sIsEaglLayer = TRUE;
 
 - (void) layoutSubviews
 {
-	
-	NSLog(@"Tryin got layout subviews");
 	
 	if (![self ableToDraw])
 		return;
@@ -119,7 +116,6 @@ static Boolean sIsEaglLayer = TRUE;
 
 - (void)drawView:(id)sender
 {
-	NSLog(@"Can we draw draw?");
 	
 	if (![self ableToDraw]) // If we don't have an app or a renderer yet, bail out
 		return;
