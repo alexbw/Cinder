@@ -613,6 +613,10 @@
 		D2AAC088055469A000DB518D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 		EAC3D1A91011F2E700FFBC9E /* Serial.h in Headers */ = {isa = PBXBuildFile; fileRef = EAC3D1A81011F2E700FFBC9E /* Serial.h */; };
 		EAC3D1AD1011F3AC00FFBC9E /* Serial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EAC3D1AB1011F3AC00FFBC9E /* Serial.cpp */; };
+		FA37C4B811C06B6600A81282 /* CinderViewCTE.h in Headers */ = {isa = PBXBuildFile; fileRef = FA37C4B711C06B6600A81282 /* CinderViewCTE.h */; };
+		FA37C4B911C06B6600A81282 /* CinderViewCTE.h in Headers */ = {isa = PBXBuildFile; fileRef = FA37C4B711C06B6600A81282 /* CinderViewCTE.h */; };
+		FA37C4BB11C06B9200A81282 /* CinderViewCTE.mm in Sources */ = {isa = PBXBuildFile; fileRef = FA37C4BA11C06B9200A81282 /* CinderViewCTE.mm */; };
+		FA37C4BC11C06B9200A81282 /* CinderViewCTE.mm in Sources */ = {isa = PBXBuildFile; fileRef = FA37C4BA11C06B9200A81282 /* CinderViewCTE.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -871,6 +875,8 @@
 		D2F7E8BE07B2D77200F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		EAC3D1A81011F2E700FFBC9E /* Serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Serial.h; sourceTree = "<group>"; };
 		EAC3D1AB1011F3AC00FFBC9E /* Serial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Serial.cpp; sourceTree = "<group>"; };
+		FA37C4B711C06B6600A81282 /* CinderViewCTE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CinderViewCTE.h; path = app/CinderViewCTE.h; sourceTree = "<group>"; };
+		FA37C4BA11C06B9200A81282 /* CinderViewCTE.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CinderViewCTE.mm; path = app/CinderViewCTE.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -929,6 +935,7 @@
 		002419CC0E8035CA004D34EB /* app */ = {
 			isa = PBXGroup;
 			children = (
+				FA37C4B711C06B6600A81282 /* CinderViewCTE.h */,
 				0049C1B31010E5A40015B4B9 /* Renderer.h */,
 				0088773B0F96671600FD55C5 /* FileDropEvent.h */,
 				5391FD670E957646002A13D5 /* KeyEvent.h */,
@@ -955,6 +962,7 @@
 		00241A0A0E803708004D34EB /* app */ = {
 			isa = PBXGroup;
 			children = (
+				FA37C4BA11C06B9200A81282 /* CinderViewCTE.mm */,
 				007B09830E957B9A0052257E /* KeyEvent.cpp */,
 				002419D30E8035E1004D34EB /* App.cpp */,
 				00B4F3E60F53955000B75296 /* AppBasic.cpp */,
@@ -1553,6 +1561,7 @@
 				0049A34E116EE675007DDFB0 /* AxisAlignedBox.h in Headers */,
 				43D8B2EC11B0C85000B61EB6 /* AccelEvent.h in Headers */,
 				43D8B2F011B0C87800B61EB6 /* TouchEvent.h in Headers */,
+				FA37C4B911C06B6600A81282 /* CinderViewCTE.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1668,6 +1677,7 @@
 				0049A34F116EE675007DDFB0 /* AxisAlignedBox.h in Headers */,
 				43D8B2ED11B0C85000B61EB6 /* AccelEvent.h in Headers */,
 				43D8B2F111B0C87800B61EB6 /* TouchEvent.h in Headers */,
+				FA37C4B811C06B6600A81282 /* CinderViewCTE.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1950,6 +1960,7 @@
 				0049A34A116EE65C007DDFB0 /* AxisAlignedBox.cpp in Sources */,
 				005374F51194F584004D686E /* Text.cpp in Sources */,
 				005374F71194F588004D686E /* Font.cpp in Sources */,
+				FA37C4BC11C06B9200A81282 /* CinderViewCTE.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2028,6 +2039,7 @@
 				0049A34B116EE65D007DDFB0 /* AxisAlignedBox.cpp in Sources */,
 				005374F61194F584004D686E /* Text.cpp in Sources */,
 				005374F81194F589004D686E /* Font.cpp in Sources */,
+				FA37C4BB11C06B9200A81282 /* CinderViewCTE.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

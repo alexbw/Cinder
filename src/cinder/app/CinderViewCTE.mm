@@ -1,36 +1,30 @@
-/*
- Copyright (c) 2010, The Barbarian Group
- All rights reserved.
-
- Redistribution and use in source and binary forms, with or without modification, are permitted provided that
- the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice, this list of conditions and
-	the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
-	the following disclaimer in the documentation and/or other materials provided with the distribution.
-
- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
- WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
- PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
- TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- POSSIBILITY OF SUCH DAMAGE.
-*/
+//
+//  CinderViewCTE.mm
+//  cinder
+//
+//  Created by Alex Wiltschko on 6/9/10.
+//  Copyright 2010 University of Michigan. All rights reserved.
+//
 
 
-#include "cinder/app/CinderViewCocoaTouch.h"
-#include "cinder/cocoa/CinderCocoa.h"
+#include "cinder/app/CinderViewCTE.h"
+#include "cinder/cocoa/CinderCocoa.h" // this is just for the renderer initialization
 
-@implementation CinderViewCocoaTouch
+@implementation CinderViewCTE
+@synthesize animating, animationTimer;
+@synthesize mApp, mRenderer;
 
-@synthesize animating;
 @dynamic animationFrameInterval;
 
-// Set in initWithFrame based on the renderer
+
 static Boolean sIsEaglLayer;
+
+
+- (void)dealloc {
+    [super dealloc];
+}
+
+
 
 + (Class) layerClass
 {
@@ -40,29 +34,74 @@ static Boolean sIsEaglLayer;
 		return [CALayer class];
 }
 
-- (id)initWithFrame:(CGRect)frame app:(ci::app::AppCocoaTouch*)app renderer:(ci::app::Renderer*)renderer
-{
-	// This needs to get setup immediately as +layerClass will be called when the view is initialized
-	sIsEaglLayer = renderer->isEaglLayer();
+#pragma mark - Initializers
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
 	
-	if( (self = [super initWithFrame:frame]) ) {
-		animating = FALSE;
+	// This needs to get setup immediately as +layerClass will be called when the view is initialized
+//	sIsEaglLayer = mRenderer->isEaglLayer();
+	
+	if ((self = [super initWithCoder:aDecoder])) {		
+
+		animating	 = FALSE;
 		animationFrameInterval = 1;
-		displayLink = nil;
-		mApp = app;
-		mRenderer = renderer;
-		renderer->setup( mApp, ci::cocoa::CgRectToArea( frame ), self );
+		animationTimer = nil;
+		mApp = nil;
+		mRenderer = nil;
+		self.multipleTouchEnabled = FALSE;
 		
-		self.multipleTouchEnabled = mApp->getSettings().isMultiTouchEnabled();
 	}
 	
+	return self;
+}
+
+
+- (id)initWithFrame:(CGRect)frame {
+	
+	// This needs to get setup immediately as +layerClass will be called when the view is initialized
+//	sIsEaglLayer = renderer->isEaglLayer();
+	
+    if ((self = [super initWithFrame:frame])) {
+		animating	 = FALSE;
+		animationFrameInterval = 1;
+		animationTimer = nil;
+		mApp = nil;
+		mRenderer = nil;
+		self.multipleTouchEnabled = FALSE;
+		
+    }
     return self;
 }
+
+// TODO: should be BOOL to indicate failure/success?
+// TODO: should save a state whether or not the app is running?
+- (void)launchApp
+{
+	if ([self ableToDraw] & !animating) // must have the app & renderer, and must not already be animating
+	{
+		
+		mRenderer->setup( mApp, ci::cocoa::CgRectToArea( [self bounds] ), self );
+		
+		// TODO: do all the things that we do in the launching of the app
+		mApp->privatePrepareSettings__();
+
+		// TODO: do I even need to give the app the cinder view?
+		//		 mApp->mState->mCinderView = cinderView;
+		mApp->privateSetup__();		
+		
+		[self startAnimation];
+		
+	}
+}
+
 
 - (BOOL)ableToDraw
 {
 	return (mApp != nil) & (mRenderer != nil);
 }
+
+
+# pragma mark - Drawing methods
 
 - (void) layoutSubviews
 {
@@ -75,25 +114,13 @@ static Boolean sIsEaglLayer;
 	CGRect bounds = [self bounds];
 	mRenderer->setFrameSize( bounds.size.width, bounds.size.height );
 	mApp->privateResize__( bounds.size.width, bounds.size.height );
-	[self drawView:nil];	
-}
-
-- (void)drawRect:(CGRect)rect
-{
+	[self drawView:nil];
 	
-	NSLog(@"Trying to draw");
-	if (![self ableToDraw])
-		return;
-	
-	mRenderer->startDraw();
-	mApp->privateUpdate__();
-	mApp->privateDraw__();
-	mRenderer->finishDraw();
 }
 
 - (void)drawView:(id)sender
 {
-	if (![self ableToDraw])
+	if (![self ableToDraw]) // If we don't have an app or a renderer yet, bail out
 		return;
 	
 	if( sIsEaglLayer ) {
@@ -106,48 +133,44 @@ static Boolean sIsEaglLayer;
 		[self performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:self waitUntilDone:NO];
 }
 
-- (void) startAnimation
+
+
+- (void)startAnimation
 {
-	if( ! animating ) {
-		displayLink = [NSClassFromString(@"CADisplayLink") displayLinkWithTarget:self selector:@selector(drawView:)];
-		[displayLink setFrameInterval:animationFrameInterval];
-		[displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-		
-		animating = TRUE;
+	if( ( animationTimer == nil ) || ( ! [animationTimer isValid] ) ) {
+		animationTimer = [NSTimer	 timerWithTimeInterval:animationFrameInterval
+												  target:self
+												selector:@selector(timerFired:)
+												userInfo:nil
+												 repeats:YES];
+		[[NSRunLoop currentRunLoop] addTimer:animationTimer forMode:NSDefaultRunLoopMode];
+	}	
+	
+	animating = TRUE;
+	
+}
+
+- (void)timerFired:(NSTimer *)t
+{
+	mApp->privateUpdate__();
+	
+	if (!self.hidden) // NOTE: this is probably NOT the most general way to detect if a view needs drawing
+	{
+		mRenderer->startDraw();
+		mApp->privateDraw__();
+		mRenderer->finishDraw();
 	}
+	
 }
 
 - (void)stopAnimation
 {
-	if( animating ) {
-		[displayLink invalidate];
-		displayLink = nil;
-		
-		animating = FALSE;
-	}
+	[animationTimer invalidate];
+	animating = FALSE;
 }
 
-- (NSInteger) animationFrameInterval
-{
-	return animationFrameInterval;
-}
 
-- (void) setAnimationFrameInterval:(NSInteger)frameInterval
-{
-	if ( frameInterval >= 1 ) {
-		animationFrameInterval = frameInterval;
-		
-		if( animating ) {
-			[self stopAnimation];
-			[self startAnimation];
-		}
-	}
-}
 
-- (void)dealloc
-{
-    [super dealloc];
-}
 
 - (uint32_t)addTouchToMap:(UITouch*)touch
 {
@@ -276,6 +299,5 @@ static Boolean sIsEaglLayer;
 {
 	[self touchesEnded:touches withEvent:event];
 }
-
 
 @end

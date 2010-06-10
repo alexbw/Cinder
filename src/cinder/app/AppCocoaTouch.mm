@@ -165,7 +165,6 @@ namespace cinder { namespace app {
 		// What's the best way to go about knockin' this out?
 
 //		mRenderer = shared_ptr<Renderer>( renderer );
-		
 		setupCocoaTouchView(cinderView, this);
 				
 	}
