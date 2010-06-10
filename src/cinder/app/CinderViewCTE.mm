@@ -120,12 +120,13 @@ static Boolean sIsEaglLayer = TRUE;
 	if (![self ableToDraw]) // If we don't have an app or a renderer yet, bail out
 		return;
 	
-	if( sIsEaglLayer ) {
-		mRenderer->startDraw();
-		mApp->privateUpdate__();
-		mApp->privateDraw__();
-		mRenderer->finishDraw();
-	}
+//	if( sIsEaglLayer ) {
+//		mRenderer->startDraw();
+//		mApp->privateUpdate__();
+//		mApp->privateDraw__();
+//		mRenderer->finishDraw();
+//	}
+	
 	else
 		[self performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:self waitUntilDone:NO];
 }
@@ -163,6 +164,7 @@ static Boolean sIsEaglLayer = TRUE;
 - (void)stopAnimation
 {
 	[animationTimer invalidate];
+	animationTimer = nil;	
 	animating = FALSE;
 }
 
