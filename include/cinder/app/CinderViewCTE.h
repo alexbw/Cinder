@@ -66,11 +66,8 @@
 @property (readonly, nonatomic, getter=isAnimating) BOOL animating;
 @property (nonatomic) NSInteger animationFrameInterval;
 @property (nonatomic, retain) NSTimer *animationTimer;
-
 - (id)initWithCoder:(NSCoder *)aDecoder;
 - (id)initWithFrame:(CGRect)frame;
-- (void)launchApp;
-
 - (BOOL)ableToDraw;
 - (void)startAnimation;
 - (void)layoutSubviews;
@@ -83,6 +80,9 @@
 - (uint32_t)findTouchInMap:(UITouch*)touch;
 - (void)updateActiveTouches;
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event;
+
+
+@end
 
 
 @end

@@ -278,6 +278,7 @@ class App {
 	static void		prepareLaunch();
 	static void		executeLaunch( App *app, class Renderer *renderer, const char *title, int argc, char * const argv[] );
 	static void		cleanupLaunch();
+	static void		prepareApp( App *app, class Renderer *renderer );
 	
 	virtual void	launch( const char *title, int argc, char * const argv[] ) = 0;
 	//! \endcond

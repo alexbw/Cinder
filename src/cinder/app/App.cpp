@@ -143,7 +143,8 @@ void App::privateSetup__()
 
 void App::privateResize__( int width, int height )
 {
-	getRenderer()->defaultResize();
+	// TODO: HELP HELP HELP
+//	getRenderer()->defaultResize();
 
 	vector<Listener*>::iterator listIt;
 	for( listIt = mListeners.begin(); ( listIt != mListeners.end() ) && ( ! (*listIt)->resize( width, height ) ); ++listIt );
@@ -352,6 +353,12 @@ void App::executeLaunch( App *app, class Renderer *renderer, const char *title, 
 	sInstance = app;
 	app->mRenderer = shared_ptr<Renderer>( renderer );
 	app->launch( title, argc, argv );
+}
+	
+void App::prepareApp( App *app, class Renderer *renderer )
+{
+	sInstance = app;
+	app->mRenderer = shared_ptr<Renderer>( renderer );
 }
 
 void App::cleanupLaunch()

@@ -21,8 +21,8 @@
  */
 
 #include "cinder/app/AppCocoaTouch.h"
-#include "cinder/app/CinderViewCocoaTouch.h"
 #include "cinder/cocoa/CinderCocoaTouch.h"
+#include "cinder/app/CinderViewCocoaTouch.h"
 
 namespace cinder { namespace app {
 	
@@ -49,16 +49,18 @@ namespace cinder { namespace app {
 		[app->mState->mCinderView startAnimation];
 	}
 	
-	void setupCocoaTouchView( CinderViewCocoaTouch *cinderView, AppCocoaTouch *app )
+	
+	void setupCocoaTouchView( CinderViewCTE *cinderView, class Renderer *renderer, AppCocoaTouch *app )
 	{
+		
+		app->prepareApp(app, renderer);
 		app->privatePrepareSettings__();
 
-		cinderView.mApp = app;
-		cinderView.mRenderer = app->getRenderer();
+//		cinderView.mApp = app;
+//		cinderView.mRenderer = app->getRenderer();
+		
 		app->mState->mCinderView = cinderView;
-		
 		app->privateSetup__();		
-		
 		[app->mState->mCinderView startAnimation];
 		
 		
@@ -154,18 +156,10 @@ namespace cinder { namespace app {
 		mLastAccel = mLastRawAccel = Vec3f::zero();
 	}
 	
-	void AppCocoaTouch::launchEmbeddedApp( CinderViewCocoaTouch *cinderView, class Renderer *renderer )
+	void AppCocoaTouch::launchEmbeddedApp( CinderViewCTE *cinderView, class Renderer *renderer )
 	{
-		// QUESTIONS:
-		// Do we need to set the instance?
 
-//		sInstance = this;
-		
-		// mRenderer is private, with no setter method. 
-		// What's the best way to go about knockin' this out?
-
-//		mRenderer = shared_ptr<Renderer>( renderer );
-		setupCocoaTouchView(cinderView, this);
+		setupCocoaTouchView(cinderView, renderer, this);
 				
 	}
 	

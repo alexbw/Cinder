@@ -14,10 +14,11 @@
 @synthesize animating, animationTimer;
 @synthesize mApp, mRenderer;
 
-@dynamic animationFrameInterval;
+@synthesize animationFrameInterval;
 
 
-static Boolean sIsEaglLayer;
+// TODO: HACKY HACKY HACK HACK 
+static Boolean sIsEaglLayer = TRUE;
 
 
 - (void)dealloc {
@@ -44,7 +45,7 @@ static Boolean sIsEaglLayer;
 	if ((self = [super initWithCoder:aDecoder])) {		
 
 		animating	 = FALSE;
-		animationFrameInterval = 1;
+		animationFrameInterval = 1.0/30.0;
 		animationTimer = nil;
 		mApp = nil;
 		mRenderer = nil;
@@ -63,7 +64,7 @@ static Boolean sIsEaglLayer;
 	
     if ((self = [super initWithFrame:frame])) {
 		animating	 = FALSE;
-		animationFrameInterval = 1;
+		animationFrameInterval = 1.0/30.0;
 		animationTimer = nil;
 		mApp = nil;
 		mRenderer = nil;
@@ -80,14 +81,16 @@ static Boolean sIsEaglLayer;
 	if ([self ableToDraw] & !animating) // must have the app & renderer, and must not already be animating
 	{
 		
-		mRenderer->setup( mApp, ci::cocoa::CgRectToArea( [self bounds] ), self );
+		mApp->launchEmbeddedApp( (CinderViewCTE *)self, (ci::app::Renderer *)mRenderer );
 		
+		mRenderer->setup( mApp, ci::cocoa::CgRectToArea( [self bounds] ), self );
 		// TODO: do all the things that we do in the launching of the app
 		mApp->privatePrepareSettings__();
 
 		// TODO: do I even need to give the app the cinder view?
 		//		 mApp->mState->mCinderView = cinderView;
-		mApp->privateSetup__();		
+		mApp->privateSetup__();
+		self.multipleTouchEnabled = mApp->getSettings().isMultiTouchEnabled();
 		
 		[self startAnimation];
 		
@@ -97,6 +100,7 @@ static Boolean sIsEaglLayer;
 
 - (BOOL)ableToDraw
 {
+	NSLog(@"Have app? %d Have renderer? %d", mApp != nil, mRenderer != nil);
 	return (mApp != nil) & (mRenderer != nil);
 }
 
@@ -120,6 +124,8 @@ static Boolean sIsEaglLayer;
 
 - (void)drawView:(id)sender
 {
+	NSLog(@"Can we draw draw?");
+	
 	if (![self ableToDraw]) // If we don't have an app or a renderer yet, bail out
 		return;
 	
@@ -168,7 +174,6 @@ static Boolean sIsEaglLayer;
 	[animationTimer invalidate];
 	animating = FALSE;
 }
-
 
 
 
