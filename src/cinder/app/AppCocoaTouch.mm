@@ -23,6 +23,8 @@
 #include "cinder/app/AppCocoaTouch.h"
 #include "cinder/cocoa/CinderCocoaTouch.h"
 #include "cinder/app/CinderViewCocoaTouch.h"
+#include "cinder/cocoa/CinderCocoa.h" // this is just for the renderer initialization
+
 
 namespace cinder { namespace app {
 	
@@ -59,10 +61,15 @@ namespace cinder { namespace app {
 		[cinderView setApp:app];
 		[cinderView setRenderer:app->getRenderer()];
 		
-		app->mState->mCinderView = cinderView;
-		app->privateSetup__();		
-		[app->mState->mCinderView startAnimation];
 		
+		app->getRenderer()->setup( app, ci::cocoa::CgRectToArea( [cinderView bounds] ), (UIView *)cinderView );
+		
+		app->privateSetup__();
+		app->privatePrepareSettings__();
+		[cinderView setMultipleTouchEnabled:app->getSettings().isMultiTouchEnabled()];
+
+		app->mState->mCinderView = cinderView;
+		[app->mState->mCinderView startAnimation];
 		
 	}
 	

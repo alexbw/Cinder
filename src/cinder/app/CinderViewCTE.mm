@@ -83,16 +83,11 @@ static Boolean sIsEaglLayer = TRUE;
 		
 		mApp->launchEmbeddedApp( (CinderViewCTE *)self, (ci::app::Renderer *)mRenderer );
 		
-		mRenderer->setup( mApp, ci::cocoa::CgRectToArea( [self bounds] ), self );
-		// TODO: do all the things that we do in the launching of the app
-		mApp->privatePrepareSettings__();
+		// mRenderer->setup( mApp, ci::cocoa::CgRectToArea( [self bounds] ), self );
 
-		// TODO: do I even need to give the app the cinder view?
-		//		 mApp->mState->mCinderView = cinderView;
-		mApp->privateSetup__();
-		self.multipleTouchEnabled = mApp->getSettings().isMultiTouchEnabled();
+		// self.multipleTouchEnabled = mApp->getSettings().isMultiTouchEnabled();
 		
-		[self startAnimation];
+		// [self startAnimation];
 		
 	}
 }
