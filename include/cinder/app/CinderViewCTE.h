@@ -74,6 +74,10 @@
 - (void)drawView:(id)sender;
 - (void)stopAnimation;
 
+- (void)setApp:(ci::app::AppCocoaTouch *)app;
+- (ci::app::AppCocoaTouch *)getApp;
+- (void)setRenderer:(ci::app::Renderer *)renderer;
+- (ci::app::Renderer *)getRenderer;
 
 - (uint32_t)addTouchToMap:(UITouch*)touch;
 - (void)removeTouchFromMap:(UITouch*)touch;

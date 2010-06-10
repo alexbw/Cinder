@@ -177,6 +177,34 @@ static Boolean sIsEaglLayer = TRUE;
 
 
 
+- (void)setApp:(ci::app::AppCocoaTouch *)app
+{
+	mApp = app;
+}
+
+- (ci::app::AppCocoaTouch *)getApp
+{
+	return mApp;
+}
+
+- (void)setRenderer:(ci::app::Renderer *)renderer
+{
+	mRenderer = renderer;
+}
+
+- (ci::app::Renderer *)getRenderer
+{
+	return mRenderer;
+}
+
+
+
+
+
+
+
+
+
 - (uint32_t)addTouchToMap:(UITouch*)touch
 {
 	uint32_t candidateId = 0;

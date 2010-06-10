@@ -56,8 +56,8 @@ namespace cinder { namespace app {
 		app->prepareApp(app, renderer);
 		app->privatePrepareSettings__();
 
-//		cinderView.mApp = app;
-//		cinderView.mRenderer = app->getRenderer();
+		[cinderView setApp:app];
+		[cinderView setRenderer:app->getRenderer()];
 		
 		app->mState->mCinderView = cinderView;
 		app->privateSetup__();		
