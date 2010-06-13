@@ -20,49 +20,54 @@
  POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "cinder/audio/FftProcessorImplXDsp.h" 
+#include "cinder/audio/FftProcessorImplGeneric.h"
+#include "fft4g.h"
 
 namespace cinder { namespace audio {
 
-void deleteFftBuffer( float * buffer ) {
-	delete [] buffer;
-}
-
-FftProcessorImplXDsp::FftProcessorImplXDsp( uint16_t aBandCount )
+FftProcessorImplGeneric::FftProcessorImplGeneric( uint16_t aBandCount )
 	: FftProcessorImpl( aBandCount )
 {
-	mRealData = new float[mBandCount];
-	mImagData = new float[mBandCount];
-	mRealUnswizzled = new float[mBandCount];
-	mImagUnswizzled = new float[mBandCount];
-	mUnityTable = new XDSP::XVECTOR[mBandCount];
-	XDSP::FFTInitializeUnityTable( mUnityTable, mBandCount );
-
-	mLog2Bands = log( (float)mBandCount ) / log( 2.0f );
-}
-
-FftProcessorImplXDsp::~FftProcessorImplXDsp()
-{
-	delete mRealData;
-	delete mImagData;
-	delete mUnityTable;
-}
-
-shared_ptr<float> FftProcessorImplXDsp::process( const float * inBuffer )
-{
-	memcpy( mRealData, inBuffer, mBandCount * sizeof( float ) );
-	memset( mImagData, 0, mBandCount * sizeof( float ) );
-	XDSP::FFT( (XDSP::XVECTOR *)mRealData, (XDSP::XVECTOR *)mImagData, (XDSP::XVECTOR *)mUnityTable, mBandCount );
-
-	XDSP::FFTUnswizzle( mRealUnswizzled, mRealData, mLog2Bands );
-	XDSP::FFTUnswizzle( mImagUnswizzled, mImagData, mLog2Bands );
-
-	float * outBuffer = new float[mBandCount];
-	for( uint16_t i = 0; i < mBandCount; i++ ) {
-		outBuffer[i] = sqrt( ( mRealUnswizzled[i] * mRealUnswizzled[i] ) + ( mImagUnswizzled[i] * mImagUnswizzled[i] ) );
+	ip = (int *)calloc((2 + sqrt(aBandCount)), sizeof(int));
+	w  = (double *)calloc((aBandCount - 1), sizeof(double));
+	ip[0] = 0; // Need to set this before the first time we run the FFT
+	holdingBuffer	= (double *)calloc(aBandCount*2, sizeof(double));
+//	outData			= (float *)calloc(aBandCount, sizeof(float));
+	
+	if( mBandCount & ( mBandCount - 1 ) ) {
+		//TODO: not power of 2
 	}
+	
+	
+}
 
-	return shared_ptr<float>( outBuffer, deleteFftBuffer );
+FftProcessorImplGeneric::~FftProcessorImplGeneric()
+{
+	free( ip );
+	free( w );
+	free( holdingBuffer );
+//	free( outData );
+	
+}
+
+shared_ptr<float> FftProcessorImplGeneric::process( const float * inData )
+{
+	
+	memset(holdingBuffer, 0, sizeof(double)*mBandCount);
+		   
+	for (int i=0; i < mBandCount*2; ++i)
+		holdingBuffer[i] = (double)inData[i];
+
+	rdft(mBandCount*2, 1, holdingBuffer, ip, w);
+	
+	float * outData = new float[mBandCount];
+	for (int i=0; i<mBandCount; ++i) {
+		outData[i] = (float)sqrt(holdingBuffer[i*2]*holdingBuffer[i*2] + holdingBuffer[i*2+1]*holdingBuffer[i*2+1]);
+	}
+	
+	printf("What's in the 10th freq bin? %f\n", outData[9]);
+		
+	return shared_ptr<float>( outData );;
 }
 
 }} //namespace

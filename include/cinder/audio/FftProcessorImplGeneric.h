@@ -22,37 +22,23 @@
 
 #pragma once
 
-#include "cinder/Cinder.h"
-#include "cinder/audio/PcmBuffer.h"
+#include "cinder/audio/FftProcessor.h"
+#include <math.h>
 
 namespace cinder { namespace audio {
 
-shared_ptr<float> calculateFft( Buffer32fRef aBuffer, uint16_t aBandCount );
-	
-class FftProcessorImpl {
+class FftProcessorImplGeneric : public FftProcessorImpl {
  public:
-	FftProcessorImpl( uint16_t aBandCount );
-	virtual ~FftProcessorImpl() {}
-	virtual shared_ptr<float> process( const float * inBuffer ) = 0;
-	uint16_t getBandCount() const { return mBandCount; }
- protected:
-	uint16_t mBandCount;
-};
-
-typedef shared_ptr<class FftProcessor> FftProcessorRef;
-shared_ptr<float> calculateFft( Buffer32fRef aBuffer, uint16_t aBoundCount, FftProcessorRef processor );
+	FftProcessorImplGeneric( uint16_t aBandCount );
+	~FftProcessorImplGeneric();
 	
-class FftProcessor {
- public:
-	static const uint16_t	DEFAULT_BAND_COUNT = 512;
-	
-	static FftProcessorRef createRef( uint16_t aBandCount = DEFAULT_BAND_COUNT );
-	
-	shared_ptr<float> process( const float * inBuffer ) { return mImpl->process( inBuffer ); }
-	uint16_t getBandCount() const { return mImpl->getBandCount(); }
+	shared_ptr<float> process( const float * inBuffer );
  private:
-	FftProcessor( uint16_t aBandCount );
-	shared_ptr<FftProcessorImpl> mImpl;
+	
+	int					*ip;
+	double*				w;
+	double*				holdingBuffer;
+//	float*				outData;
 };
 
 }} //namespace

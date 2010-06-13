@@ -60,6 +60,8 @@ shared_ptr<float> FftProcessorImplAccelerate::process( const float * inData )
 	vDSP_fft_zrip( mFftSetup, &mFftComplexBuffer, 1, mLog2Size, FFT_FORWARD );
 	
 	float * outData = new float[mBandCount];
+	
+	
 	for( int i = 0; i < mBandCount; i++ ) {
 		outData[i] = sqrt( ( mFftComplexBuffer.realp[i] * mFftComplexBuffer.realp[i] ) + ( mFftComplexBuffer.imagp[i] * mFftComplexBuffer.imagp[i] ) );
 	}
