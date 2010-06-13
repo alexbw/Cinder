@@ -8,6 +8,49 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
+#define kBandCount 64
+#define kFFTHistory 5
+
+class WelchPeriodogram {
+public:
+	float *fftHistory[kFFTHistory];
+	float *fftDisplayBuffer;
+	float *getFft() { return fftDisplayBuffer; }
+	
+	WelchPeriodogram() {};
+	
+	WelchPeriodogram(int numBands)
+	{
+		for (int i=0; i < kFFTHistory; ++i)
+			fftHistory[i] = new float[numBands];
+		
+		fftDisplayBuffer = new float[numBands];
+		
+	}
+	
+	void addFft(const float *fftBuffer) 
+	{
+		static int iFFT = kFFTHistory;
+		if (iFFT >= kFFTHistory)
+			iFFT = 0;
+		
+		memset(fftDisplayBuffer, 0, sizeof(fftDisplayBuffer));
+		for (int i=0; i < kBandCount; ++i)
+		{
+			fftHistory[iFFT][i] = fftBuffer[i];
+			for (int j=0; j < kFFTHistory; ++j)
+				fftDisplayBuffer[i] += fftHistory[j][i];
+			fftDisplayBuffer[i] /= (float)kBandCount;
+			
+		}
+		
+		iFFT++;
+		
+	}
+	
+};
+
+
 // We'll create a new Cinder Application by deriving from the AppBasic class
 class AudioAnalysisSampleApp : public AppBasic {
  public:
@@ -17,16 +60,27 @@ class AudioAnalysisSampleApp : public AppBasic {
 	void drawFft( audio::TrackRef track );
 	void keyDown( KeyEvent e );
 	
+	WelchPeriodogram *welch;
+	
 	audio::TrackRef mTrack1;
 	audio::TrackRef mTrack2;
+	
+	AudioAnalysisSampleApp()
+	{
+		welch = new WelchPeriodogram(kBandCount);
+	}
+		
+private:
+	
+
+	
 };
 
 void AudioAnalysisSampleApp::setup()
 {
 	//mTrack1 = audio::Output::addTrack( audio::load( "C:\\code\\cinder\\samples\\AudioPlayback\\resources\\booyah.mp3" ) );
 	//mTrack1->setPcmBuffering( true );
-	mTrack1 = audio::Output::addTrack( audio::load( loadResource( RES_GUITAR ) ) );
-	//mTrack1 = audio::Output::addTrack( audio::load( "../../../../AudioPlayback/resources/booyah.mp3" ) );
+	mTrack1 = audio::Output::addTrack( audio::load( loadResource( RES_TTV ) ) );
 	mTrack1->setPcmBuffering( true );
 	//mTrack2 = audio::Output::addTrack( audio::load( loadResource( RES_DRUMS ) ) );
 	//mTrack2->setPcmBuffering( true );
@@ -40,12 +94,18 @@ void AudioAnalysisSampleApp::keyDown( KeyEvent e ) {
 
 void AudioAnalysisSampleApp::drawWaveForm( audio::TrackRef track )
 {
+	
+	
 	audio::PcmBuffer32fRef aPcmBuffer = track->getPcmBuffer();
 	if( ! aPcmBuffer ) {
 		return;
 	}
 	
+
+	
 	uint32_t bufferSamples = aPcmBuffer->getSampleCount();
+
+	
 	audio::Buffer32fRef leftBuffer = aPcmBuffer->getChannelData( audio::CHANNEL_FRONT_LEFT );
 	audio::Buffer32fRef rightBuffer = aPcmBuffer->getChannelData( audio::CHANNEL_FRONT_RIGHT );
 
@@ -73,29 +133,39 @@ void AudioAnalysisSampleApp::drawWaveForm( audio::TrackRef track )
 
 void AudioAnalysisSampleApp::drawFft( audio::TrackRef track )
 {
-	float ht = 100.0f;
-	uint16_t bandCount = 32;
+
 	
+	float ht = (float)getWindowHeight();
+
+	float dutyCycle = 0.8;
+	float barWidth = (float)getWindowWidth()/(float)kBandCount;
+		
 	audio::PcmBuffer32fRef aPcmBuffer = track->getPcmBuffer();
 	if( ! aPcmBuffer ) {
 		return;
 	}
-	boost::shared_ptr<float> fftRef = audio::calculateFft( aPcmBuffer->getChannelData( audio::CHANNEL_FRONT_LEFT ), bandCount );
+	boost::shared_ptr<float> fftRef = audio::calculateFft( aPcmBuffer->getChannelData( audio::CHANNEL_FRONT_LEFT ), kBandCount );
 	if( ! fftRef ) {
 		return;
 	}
 	
 	float * fftBuffer = fftRef.get();
 	
-	for( int i = 0; i < ( bandCount ); i++ ) {
-		float barY = fftBuffer[i] / bandCount * ht;
+	welch->addFft(fftBuffer);
+	
+	float * fftDisplayBuffer = welch->getFft();
+	
+// float *fftDisplayBuffer = fftRef.get();
+	
+	for( int i = 0; i < ( kBandCount ); i++ ) {
+		float barY = 10.0f*kFFTHistory*fftDisplayBuffer[i] / kBandCount * ht;
 		glBegin( GL_QUADS );
 			glColor3f( 255.0f, 255.0f, 0.0f );
-			glVertex2f( i * 3, ht );
-			glVertex2f( i * 3 + 1, ht );
+			glVertex2f( i * barWidth, ht );
+			glVertex2f( i * barWidth + barWidth*dutyCycle, ht );
 			glColor3f( 0.0f, 255.0f, 0.0f );
-			glVertex2f( i * 3 + 1, ht - barY );
-			glVertex2f( i * 3, ht - barY );
+			glVertex2f( i * barWidth + barWidth*dutyCycle, ht - barY );
+			glVertex2f( i * barWidth, ht - barY );
 		glEnd();
 	}
 }
@@ -107,7 +177,7 @@ void AudioAnalysisSampleApp::draw()
 	glPushMatrix();
 		glTranslatef( 0.0, 0.0, 0.0 );
 		drawFft( mTrack1 );
-		//drawWaveForm( mTrack1 );
+		drawWaveForm( mTrack1 );
 		glTranslatef( 0.0, 120.0, 0.0 );
 		//drawFft( mTrack2 );
 		//drawWaveForm( mTrack2 );
