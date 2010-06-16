@@ -957,7 +957,6 @@
 		002419CC0E8035CA004D34EB /* app */ = {
 			isa = PBXGroup;
 			children = (
-				FA37C4B711C06B6600A81282 /* CinderViewCTE.h */,
 				0049C1B31010E5A40015B4B9 /* Renderer.h */,
 				0088773B0F96671600FD55C5 /* FileDropEvent.h */,
 				5391FD670E957646002A13D5 /* KeyEvent.h */,
@@ -984,7 +983,6 @@
 		00241A0A0E803708004D34EB /* app */ = {
 			isa = PBXGroup;
 			children = (
-				FA37C4BA11C06B9200A81282 /* CinderViewCTE.mm */,
 				007B09830E957B9A0052257E /* KeyEvent.cpp */,
 				002419D30E8035E1004D34EB /* App.cpp */,
 				00B4F3E60F53955000B75296 /* AppBasic.cpp */,
