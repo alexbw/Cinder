@@ -24,7 +24,7 @@
 
 #include "cinder/Cinder.h"
 #include "cinder/DataSource.h"
-#include "cinder/audio/Buffer.h"
+#include "cinder/audio/PcmBuffer.h"
 
 #include <map>
 #include <string>
@@ -102,7 +102,7 @@ class Target : public Io {
 class Source : public Io {
  public:
 	virtual ~Source() {}
-	virtual LoaderRef getLoader( Target *target ) { return LoaderRef(); }
+	virtual LoaderRef createLoader( Target *target ) { return LoaderRef(); }
 	
 	virtual double getDuration() const = 0;
  protected:
@@ -118,7 +118,7 @@ class Loader {
 	virtual ~Loader() {}
 	virtual uint32_t getOptimalBufferSize() const { return 0; };
 
-	virtual void loadData( uint32_t *ioSampleCount, BufferList *ioData ) = 0;
+	virtual void loadData( BufferList *ioData ) = 0;
 	virtual uint64_t getSampleOffset() const = 0;
 	virtual void setSampleOffset( uint64_t anOffset ) = 0;
  protected:
