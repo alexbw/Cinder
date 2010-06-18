@@ -630,6 +630,18 @@
 		FA732EF911C43F0B00433563 /* fft4g.h in Headers */ = {isa = PBXBuildFile; fileRef = FA732EF811C43F0B00433563 /* fft4g.h */; };
 		FA732EFA11C43F0B00433563 /* fft4g.h in Headers */ = {isa = PBXBuildFile; fileRef = FA732EF811C43F0B00433563 /* fft4g.h */; };
 		FA732EFB11C43F0B00433563 /* fft4g.h in Headers */ = {isa = PBXBuildFile; fileRef = FA732EF811C43F0B00433563 /* fft4g.h */; };
+		FAE9AF7E11CC0A1C00DA1EBF /* Io.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAE9AF7B11CC0A1C00DA1EBF /* Io.cpp */; };
+		FAE9AF7F11CC0A1C00DA1EBF /* Output.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAE9AF7C11CC0A1C00DA1EBF /* Output.cpp */; };
+		FAE9AF8011CC0A1C00DA1EBF /* OutputImplAudioUnit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAE9AF7D11CC0A1C00DA1EBF /* OutputImplAudioUnit.cpp */; };
+		FAE9AF8111CC0A1C00DA1EBF /* Io.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAE9AF7B11CC0A1C00DA1EBF /* Io.cpp */; };
+		FAE9AF8211CC0A1C00DA1EBF /* Output.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAE9AF7C11CC0A1C00DA1EBF /* Output.cpp */; };
+		FAE9AF8311CC0A1C00DA1EBF /* OutputImplAudioUnit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAE9AF7D11CC0A1C00DA1EBF /* OutputImplAudioUnit.cpp */; };
+		FAE9AF8811CC0A3400DA1EBF /* Io.h in Headers */ = {isa = PBXBuildFile; fileRef = FAE9AF8511CC0A3400DA1EBF /* Io.h */; };
+		FAE9AF8911CC0A3400DA1EBF /* Output.h in Headers */ = {isa = PBXBuildFile; fileRef = FAE9AF8611CC0A3400DA1EBF /* Output.h */; };
+		FAE9AF8A11CC0A3400DA1EBF /* OutputImplAudioUnit.h in Headers */ = {isa = PBXBuildFile; fileRef = FAE9AF8711CC0A3400DA1EBF /* OutputImplAudioUnit.h */; };
+		FAE9AF8B11CC0A3400DA1EBF /* Io.h in Headers */ = {isa = PBXBuildFile; fileRef = FAE9AF8511CC0A3400DA1EBF /* Io.h */; };
+		FAE9AF8C11CC0A3400DA1EBF /* Output.h in Headers */ = {isa = PBXBuildFile; fileRef = FAE9AF8611CC0A3400DA1EBF /* Output.h */; };
+		FAE9AF8D11CC0A3400DA1EBF /* OutputImplAudioUnit.h in Headers */ = {isa = PBXBuildFile; fileRef = FAE9AF8711CC0A3400DA1EBF /* OutputImplAudioUnit.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -899,8 +911,12 @@
 		FA732EF011C43E5600433563 /* FftProcessorImplGeneric.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FftProcessorImplGeneric.h; sourceTree = "<group>"; };
 		FA732EF411C43F0000433563 /* fft4g.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fft4g.cpp; sourceTree = "<group>"; };
 		FA732EF811C43F0B00433563 /* fft4g.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft4g.h; sourceTree = "<group>"; };
-		FAE9AEAB11CBF0CB00DA1EBF /* iphone */ = {isa = PBXFileReference; lastKnownFileType = folder; path = iphone; sourceTree = "<group>"; };
-		FAE9AEB011CBF0F700DA1EBF /* iphone */ = {isa = PBXFileReference; lastKnownFileType = folder; path = iphone; sourceTree = "<group>"; };
+		FAE9AF7B11CC0A1C00DA1EBF /* Io.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Io.cpp; path = iphone/Io.cpp; sourceTree = "<group>"; };
+		FAE9AF7C11CC0A1C00DA1EBF /* Output.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Output.cpp; path = iphone/Output.cpp; sourceTree = "<group>"; };
+		FAE9AF7D11CC0A1C00DA1EBF /* OutputImplAudioUnit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OutputImplAudioUnit.cpp; path = iphone/OutputImplAudioUnit.cpp; sourceTree = "<group>"; };
+		FAE9AF8511CC0A3400DA1EBF /* Io.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Io.h; path = iphone/Io.h; sourceTree = "<group>"; };
+		FAE9AF8611CC0A3400DA1EBF /* Output.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Output.h; path = iphone/Output.h; sourceTree = "<group>"; };
+		FAE9AF8711CC0A3400DA1EBF /* OutputImplAudioUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OutputImplAudioUnit.h; path = iphone/OutputImplAudioUnit.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1393,7 +1409,7 @@
 		C7BA405B0FA8BEFD00AADC07 /* audio */ = {
 			isa = PBXGroup;
 			children = (
-				FAE9AEAB11CBF0CB00DA1EBF /* iphone */,
+				FAE9AF8411CC0A2C00DA1EBF /* iphone */,
 				FA732EF811C43F0B00433563 /* fft4g.h */,
 				C76DBE5911B8060000A353EB /* FftProcessor.h */,
 				FA732EF011C43E5600433563 /* FftProcessorImplGeneric.h */,
@@ -1412,7 +1428,7 @@
 		C7BA40600FA8BF0F00AADC07 /* audio */ = {
 			isa = PBXGroup;
 			children = (
-				FAE9AEB011CBF0F700DA1EBF /* iphone */,
+				FAE9AF7A11CC0A1300DA1EBF /* iphone */,
 				C76DBDC111B6B85E00A353EB /* FftProcessor.cpp */,
 				C76DBDC211B6B85E00A353EB /* FftProcessorImplAccelerate.cpp */,
 				FA732EEC11C43E2D00433563 /* FftProcessorImplGeneric.cpp */,
@@ -1479,6 +1495,26 @@
 				C7CDF0080EBD5DA4000997D3 /* xpath_syntax.h */,
 			);
 			name = include;
+			sourceTree = "<group>";
+		};
+		FAE9AF7A11CC0A1300DA1EBF /* iphone */ = {
+			isa = PBXGroup;
+			children = (
+				FAE9AF7B11CC0A1C00DA1EBF /* Io.cpp */,
+				FAE9AF7C11CC0A1C00DA1EBF /* Output.cpp */,
+				FAE9AF7D11CC0A1C00DA1EBF /* OutputImplAudioUnit.cpp */,
+			);
+			name = iphone;
+			sourceTree = "<group>";
+		};
+		FAE9AF8411CC0A2C00DA1EBF /* iphone */ = {
+			isa = PBXGroup;
+			children = (
+				FAE9AF8511CC0A3400DA1EBF /* Io.h */,
+				FAE9AF8611CC0A3400DA1EBF /* Output.h */,
+				FAE9AF8711CC0A3400DA1EBF /* OutputImplAudioUnit.h */,
+			);
+			name = iphone;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1597,6 +1633,9 @@
 				43D8B2F011B0C87800B61EB6 /* TouchEvent.h in Headers */,
 				FA732EF211C43E5600433563 /* FftProcessorImplGeneric.h in Headers */,
 				FA732EFA11C43F0B00433563 /* fft4g.h in Headers */,
+				FAE9AF8B11CC0A3400DA1EBF /* Io.h in Headers */,
+				FAE9AF8C11CC0A3400DA1EBF /* Output.h in Headers */,
+				FAE9AF8D11CC0A3400DA1EBF /* OutputImplAudioUnit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1713,6 +1752,9 @@
 				43D8B2F111B0C87800B61EB6 /* TouchEvent.h in Headers */,
 				FA732EF311C43E5600433563 /* FftProcessorImplGeneric.h in Headers */,
 				FA732EFB11C43F0B00433563 /* fft4g.h in Headers */,
+				FAE9AF8811CC0A3400DA1EBF /* Io.h in Headers */,
+				FAE9AF8911CC0A3400DA1EBF /* Output.h in Headers */,
+				FAE9AF8A11CC0A3400DA1EBF /* OutputImplAudioUnit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2002,6 +2044,9 @@
 				005374F71194F588004D686E /* Font.cpp in Sources */,
 				FA732EEE11C43E2D00433563 /* FftProcessorImplGeneric.cpp in Sources */,
 				FA732EF611C43F0000433563 /* fft4g.cpp in Sources */,
+				FAE9AF8111CC0A1C00DA1EBF /* Io.cpp in Sources */,
+				FAE9AF8211CC0A1C00DA1EBF /* Output.cpp in Sources */,
+				FAE9AF8311CC0A1C00DA1EBF /* OutputImplAudioUnit.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2082,6 +2127,9 @@
 				005374F81194F589004D686E /* Font.cpp in Sources */,
 				FA732EEF11C43E2D00433563 /* FftProcessorImplGeneric.cpp in Sources */,
 				FA732EF711C43F0000433563 /* fft4g.cpp in Sources */,
+				FAE9AF7E11CC0A1C00DA1EBF /* Io.cpp in Sources */,
+				FAE9AF7F11CC0A1C00DA1EBF /* Output.cpp in Sources */,
+				FAE9AF8011CC0A1C00DA1EBF /* OutputImplAudioUnit.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
