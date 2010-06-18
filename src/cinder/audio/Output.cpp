@@ -22,7 +22,6 @@
 
 #include "cinder/audio/Output.h"
 
-<<<<<<< HEAD
 #include "cinder/CinderMath.h"
 #include "cinder/Rand.h"
 
@@ -44,7 +43,7 @@
 
 namespace cinder { namespace audio {
 
-#if defined(CINDER_MAC)
+//#if defined(CINDER_MAC) // ABW: re-enable this
 class OutputAudioUnit;
 
 class TargetOutputAudioUnit : public Target {
@@ -69,7 +68,9 @@ class OutputAudioUnit : public OutputImpl {
 	void setVolume( float aVolume );
 	float getVolume() const;
   private:
-	AudioDeviceID					mOutputDeviceId;
+	#if defined(CINDER_MAC)
+		AudioDeviceID					mOutputDeviceId;
+	#endif
 	AUGraph							mGraph;
 	AUNode							mMixerNode;
 	AUNode							mOutputNode;
@@ -281,18 +282,20 @@ OutputAudioUnit::OutputAudioUnit()
 		std::cout << "Error 2!" << std::endl;	
 	}
 	
-	//get default output device id and set it as the outdevice for the output unit
-	UInt32 dsize = sizeof( AudioDeviceID );
-	err = AudioHardwareGetProperty( kAudioHardwarePropertyDefaultOutputDevice, &dsize, &mOutputDeviceId );
-	if( err != noErr ) {
-		std::cout << "Error getting default output device" << std::endl;
+	UInt32 dsize;
+	#if defined(CINDER_MAC)
+		//get default output device id and set it as the outdevice for the output unit
+		dsize = sizeof( AudioDeviceID );
+		err = AudioHardwareGetProperty( kAudioHardwarePropertyDefaultOutputDevice, &dsize, &mOutputDeviceId );
+		if( err != noErr ) {
+			std::cout << "Error getting default output device" << std::endl;
+		}
+		
+		err = AudioUnitSetProperty( mOutputUnit, kAudioOutputUnitProperty_CurrentDevice, kAudioUnitScope_Global, 0, &mOutputDeviceId, sizeof( mOutputDeviceId ) );
+		if( err != noErr ) {
+			std::cout << "Error setting current output device" << std::endl;
 	}
-	
-	err = AudioUnitSetProperty( mOutputUnit, kAudioOutputUnitProperty_CurrentDevice, kAudioUnitScope_Global, 0, &mOutputDeviceId, sizeof( mOutputDeviceId ) );
-	if( err != noErr ) {
-		std::cout << "Error setting current output device" << std::endl;
-	}
-	
+	#endif
 	//Tell the output unit not to reset timestamps 
 	//Otherwise sample rate changes will cause sync los
 	UInt32 startAtZero = 0;
@@ -407,15 +410,18 @@ void OutputAudioUnit::setVolume( float aVolume )
 		//throw
 	}
 }
+	
+//#endif
+	
+}} // namespace
 
-=======
+
 #if defined( CINDER_COCOA )
 	#include "cinder/audio/OutputImplAudioUnit.h"
 	typedef cinder::audio::OutputImplAudioUnit	OutputPlatformImpl;
 #elif defined( CINDER_MSW )
 	#include "cinder/audio/OutputImplXAudio.h"
 	typedef cinder::audio::OutputImplXAudio	OutputPlatformImpl;
->>>>>>> audio_fft
 #endif
 
 

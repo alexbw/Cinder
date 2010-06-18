@@ -28,7 +28,8 @@
 #include "cinder/audio/CocoaCaConverter.h"
 
 #include <AudioToolbox/AudioFile.h>
-
+#include <AudioToolbox/AudioToolbox.h>
+#include <AudioUnit/AudioUnit.h>
 
 namespace cinder { namespace audio {
 

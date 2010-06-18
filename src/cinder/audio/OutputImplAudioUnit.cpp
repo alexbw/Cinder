@@ -216,17 +216,20 @@ OutputImplAudioUnit::OutputImplAudioUnit()
 		std::cout << "Error 2!" << std::endl;	
 	}
 	
-	//get default output device id and set it as the outdevice for the output unit
-	UInt32 dsize = sizeof( AudioDeviceID );
-	err = AudioHardwareGetProperty( kAudioHardwarePropertyDefaultOutputDevice, &dsize, &mOutputDeviceId );
-	if( err != noErr ) {
-		std::cout << "Error getting default output device" << std::endl;
-	}
-	
-	err = AudioUnitSetProperty( mOutputUnit, kAudioOutputUnitProperty_CurrentDevice, kAudioUnitScope_Global, 0, &mOutputDeviceId, sizeof( mOutputDeviceId ) );
-	if( err != noErr ) {
-		std::cout << "Error setting current output device" << std::endl;
-	}
+	UInt32 dsize;
+	#if defined(CINDER_MAC) // on the iPhone, this is an unnecessary step
+		//get default output device id and set it as the outdevice for the output unit
+		dsize = sizeof( AudioDeviceID );
+		err = AudioHardwareGetProperty( kAudioHardwarePropertyDefaultOutputDevice, &dsize, &mOutputDeviceId );
+		if( err != noErr ) {
+			std::cout << "Error getting default output device" << std::endl;
+		}
+		
+		err = AudioUnitSetProperty( mOutputUnit, kAudioOutputUnitProperty_CurrentDevice, kAudioUnitScope_Global, 0, &mOutputDeviceId, sizeof( mOutputDeviceId ) );
+		if( err != noErr ) {
+			std::cout << "Error setting current output device" << std::endl;
+		}
+	#endif
 	
 	//Tell the output unit not to reset timestamps 
 	//Otherwise sample rate changes will cause sync los

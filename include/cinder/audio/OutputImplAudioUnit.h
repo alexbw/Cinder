@@ -24,11 +24,19 @@
 
 #include "cinder/audio/Output.h"
 
-#include <CoreServices/CoreServices.h>
+//#include <CoreServices/CoreServices.h>
 #include <CoreAudio/CoreAudioTypes.h>
 #include <AudioUnit/AudioUnit.h>
 #include <AudioToolbox/AUGraph.h>
 #include <boost/thread/mutex.hpp>
+
+// ABW: this wasn't here before... should it stay here?
+#include "OutputImplAudioUnit.h"
+
+// Audio unit parameters have slightly different names on the Mac and the iPhone...
+// so we'll just be renaming the iPhone ones to fit with the Mac
+
+
 
 namespace cinder { namespace audio {
 
@@ -56,7 +64,9 @@ class OutputImplAudioUnit : public OutputImpl {
 	void setVolume( float aVolume );
 	float getVolume() const;
   private:
-	AudioDeviceID					mOutputDeviceId;
+	#if defined(CINDER_MAC)
+		AudioDeviceID					mOutputDeviceId;
+	#endif
 	AUGraph							mGraph;
 	AUNode							mMixerNode;
 	AUNode							mOutputNode;

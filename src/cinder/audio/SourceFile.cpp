@@ -25,8 +25,15 @@
 
 #include <iostream>
 
-#if defined( CINDER_COCOA )
+
+
+#if defined (CINDER_MAC)
+	#define readPermission fsRdPerm
+	#define fileNotFound fnfErr
+#elif defined(CINDER_COCOA) && !defined(CINDER_MAC)
 	#include <CoreFoundation/CoreFoundation.h>
+	#define readPermission kAudioFileReadPermission
+	#define fileNotFound kAudioFileStreamError_InvalidFile // ABW: don't know if this is fnfErr's true counterpart
 #endif
 
 namespace cinder { namespace audio {
@@ -158,18 +165,18 @@ SourceFile::SourceFile( DataSourceRef dataSourceRef )
 	if( dataSourceRef->isFilePath() ) {
 		::CFStringRef pathString = cocoa::createCfString( dataSourceRef->getFilePath() );
 		::CFURLRef urlRef = ::CFURLCreateWithFileSystemPath( kCFAllocatorDefault, pathString, kCFURLPOSIXPathStyle, false );
-		err = AudioFileOpenURL( urlRef, fsRdPerm, 0, &aFileRef );
+		err = AudioFileOpenURL( urlRef, readPermission, 0, &aFileRef );
 		::CFRelease( pathString );
 		::CFRelease( urlRef );
 		if( err ) {
-			if( err == fnfErr ) {
+			if( err == fileNotFound ) {
 				throw IoExceptionSourceNotFound();
 			}
 			throw IoExceptionFailedLoad();
 		}
 	} else if( dataSourceRef->isUrl() ) {
 		::CFURLRef urlRef = cocoa::createCfUrl( dataSourceRef->getUrl() );
-		err = AudioFileOpenURL( urlRef, fsRdPerm, 0, &aFileRef );
+		err = AudioFileOpenURL( urlRef, readPermission, 0, &aFileRef );
 		::CFRelease( urlRef );
 		if( err ) {
 			throw IoExceptionFailedLoad();
