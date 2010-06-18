@@ -899,6 +899,8 @@
 		FA732EF011C43E5600433563 /* FftProcessorImplGeneric.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FftProcessorImplGeneric.h; sourceTree = "<group>"; };
 		FA732EF411C43F0000433563 /* fft4g.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fft4g.cpp; sourceTree = "<group>"; };
 		FA732EF811C43F0B00433563 /* fft4g.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft4g.h; sourceTree = "<group>"; };
+		FAE9AEAB11CBF0CB00DA1EBF /* iphone */ = {isa = PBXFileReference; lastKnownFileType = folder; path = iphone; sourceTree = "<group>"; };
+		FAE9AEB011CBF0F700DA1EBF /* iphone */ = {isa = PBXFileReference; lastKnownFileType = folder; path = iphone; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1391,6 +1393,7 @@
 		C7BA405B0FA8BEFD00AADC07 /* audio */ = {
 			isa = PBXGroup;
 			children = (
+				FAE9AEAB11CBF0CB00DA1EBF /* iphone */,
 				FA732EF811C43F0B00433563 /* fft4g.h */,
 				C76DBE5911B8060000A353EB /* FftProcessor.h */,
 				FA732EF011C43E5600433563 /* FftProcessorImplGeneric.h */,
@@ -1409,6 +1412,7 @@
 		C7BA40600FA8BF0F00AADC07 /* audio */ = {
 			isa = PBXGroup;
 			children = (
+				FAE9AEB011CBF0F700DA1EBF /* iphone */,
 				C76DBDC111B6B85E00A353EB /* FftProcessor.cpp */,
 				C76DBDC211B6B85E00A353EB /* FftProcessorImplAccelerate.cpp */,
 				FA732EEC11C43E2D00433563 /* FftProcessorImplGeneric.cpp */,
