@@ -42,6 +42,7 @@
 namespace cinder { namespace audio {
 
 typedef shared_ptr<class Source>		SourceRef;
+typedef shared_ptr<class Target>		TargetRef;
 typedef shared_ptr<class Loader>		LoaderRef;
 
 class Io {

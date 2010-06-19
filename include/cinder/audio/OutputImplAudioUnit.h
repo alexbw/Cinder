@@ -63,6 +63,8 @@ class OutputImplAudioUnit : public OutputImpl {
 	
 	void setVolume( float aVolume );
 	float getVolume() const;
+	
+	TargetRef getTarget();
   private:
 	#if defined(CINDER_MAC)
 		AudioDeviceID					mOutputDeviceId;
