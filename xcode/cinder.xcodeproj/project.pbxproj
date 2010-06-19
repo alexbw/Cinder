@@ -512,7 +512,6 @@
 		00CFD9D91135C3520091E310 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0074399D0EA7BB7D005DD3E6 /* CoreVideo.framework */; };
 		00CFD9DA1135C3520091E310 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00E0B4B10F605D64002C8FBD /* CoreGraphics.framework */; };
 		00CFD9DB1135C3520091E310 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7BA40880FA8C13A00AADC07 /* AudioToolbox.framework */; };
-		00CFD9DC1135C3520091E310 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7BA408A0FA8C13A00AADC07 /* AudioUnit.framework */; };
 		00CFD9DD1135C3520091E310 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7BA408C0FA8C13A00AADC07 /* CoreAudio.framework */; };
 		00CFDA511135CB010091E310 /* gl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 00CE73970E92DBF80059E09B /* gl.cpp */; };
 		00CFDA521135CB020091E310 /* gl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 00CE73970E92DBF80059E09B /* gl.cpp */; };
@@ -652,6 +651,10 @@
 		D2AAC088055469A000DB518D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 		EAC3D1A91011F2E700FFBC9E /* Serial.h in Headers */ = {isa = PBXBuildFile; fileRef = EAC3D1A81011F2E700FFBC9E /* Serial.h */; };
 		EAC3D1AD1011F3AC00FFBC9E /* Serial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EAC3D1AB1011F3AC00FFBC9E /* Serial.cpp */; };
+		FAE9B70D11CD7FBB00DA1EBF /* CinderViewCTE.h in Headers */ = {isa = PBXBuildFile; fileRef = FAE9B70C11CD7FBB00DA1EBF /* CinderViewCTE.h */; };
+		FAE9B70E11CD7FBB00DA1EBF /* CinderViewCTE.h in Headers */ = {isa = PBXBuildFile; fileRef = FAE9B70C11CD7FBB00DA1EBF /* CinderViewCTE.h */; };
+		FAE9B71011CD7FCF00DA1EBF /* CinderViewCTE.mm in Sources */ = {isa = PBXBuildFile; fileRef = FAE9B70F11CD7FCF00DA1EBF /* CinderViewCTE.mm */; };
+		FAE9B71111CD7FCF00DA1EBF /* CinderViewCTE.mm in Sources */ = {isa = PBXBuildFile; fileRef = FAE9B70F11CD7FCF00DA1EBF /* CinderViewCTE.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -917,10 +920,8 @@
 		D2F7E8BE07B2D77200F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		EAC3D1A81011F2E700FFBC9E /* Serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Serial.h; sourceTree = "<group>"; };
 		EAC3D1AB1011F3AC00FFBC9E /* Serial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Serial.cpp; sourceTree = "<group>"; };
-		FA732EEC11C43E2D00433563 /* FftProcessorImplGeneric.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FftProcessorImplGeneric.cpp; sourceTree = "<group>"; };
-		FA732EF011C43E5600433563 /* FftProcessorImplGeneric.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FftProcessorImplGeneric.h; sourceTree = "<group>"; };
-		FA732EF411C43F0000433563 /* fft4g.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fft4g.cpp; sourceTree = "<group>"; };
-		FA732EF811C43F0B00433563 /* fft4g.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft4g.h; sourceTree = "<group>"; };
+		FAE9B70C11CD7FBB00DA1EBF /* CinderViewCTE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CinderViewCTE.h; path = app/CinderViewCTE.h; sourceTree = "<group>"; };
+		FAE9B70F11CD7FCF00DA1EBF /* CinderViewCTE.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CinderViewCTE.mm; path = app/CinderViewCTE.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -979,6 +980,7 @@
 			isa = PBXGroup;
 			children = (
 				0049C1B31010E5A40015B4B9 /* Renderer.h */,
+				FAE9B70C11CD7FBB00DA1EBF /* CinderViewCTE.h */,
 				0088773B0F96671600FD55C5 /* FileDropEvent.h */,
 				5391FD670E957646002A13D5 /* KeyEvent.h */,
 				00241ABA0E830DC7004D34EB /* MouseEvent.h */,
@@ -1004,6 +1006,7 @@
 		00241A0A0E803708004D34EB /* app */ = {
 			isa = PBXGroup;
 			children = (
+				FAE9B70F11CD7FCF00DA1EBF /* CinderViewCTE.mm */,
 				007B09830E957B9A0052257E /* KeyEvent.cpp */,
 				002419D30E8035E1004D34EB /* App.cpp */,
 				00B4F3E60F53955000B75296 /* AppBasic.cpp */,
@@ -1149,13 +1152,13 @@
 				00B729E7115DAC2B00CD71B9 /* Timer.h */,
 				00D92FE00EB8CC7200EE9D75 /* Url.h */,
 				009704A711A050C300B1FC50 /* UrlImplCurl.h */,
+				00C071B20FF16261004801EA /* Font.h */,
 				00D2F3EF0F90394000A7189A /* Ray.h */,
 				0049A34C116EE675007DDFB0 /* AxisAlignedBox.h */,
 				00D2F6F30F9188FD00A7189A /* Sphere.h */,
 				002DFC050FA50D0200E45AE0 /* TriMesh.h */,
 				002DFD530FA5602900E45AE0 /* ObjLoader.h */,
 				0071BD040FB9F4AD0092E7D6 /* Display.h */,
-				00C071B20FF16261004801EA /* Font.h */,
 				000529000FFBE14900F19492 /* Text.h */,
 				001E3562115D5F14000C228C /* Xml.h */,
 				EAC3D1A81011F2E700FFBC9E /* Serial.h */,
@@ -1617,6 +1620,7 @@
 				C7DD62D411CC471D0026B5B0 /* PcmBuffer.h in Headers */,
 				C7DD62D511CC471D0026B5B0 /* SourceFile.h in Headers */,
 				C7DD630011CC47950026B5B0 /* OutputImplXAudio.h in Headers */,
+				FAE9B70E11CD7FBB00DA1EBF /* CinderViewCTE.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1740,6 +1744,7 @@
 				C7DD62DC11CC471D0026B5B0 /* PcmBuffer.h in Headers */,
 				C7DD62DD11CC471D0026B5B0 /* SourceFile.h in Headers */,
 				C7DD630111CC47950026B5B0 /* OutputImplXAudio.h in Headers */,
+				FAE9B70D11CD7FBB00DA1EBF /* CinderViewCTE.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2033,6 +2038,7 @@
 				C7DD62F311CC473E0026B5B0 /* OutputImplAudioUnit.cpp in Sources */,
 				C7DD62F411CC473E0026B5B0 /* PcmBuffer.cpp in Sources */,
 				C7DD62F511CC473E0026B5B0 /* SourceFile.cpp in Sources */,
+				FAE9B71111CD7FCF00DA1EBF /* CinderViewCTE.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2119,6 +2125,7 @@
 				C7DD62FB11CC473E0026B5B0 /* OutputImplAudioUnit.cpp in Sources */,
 				C7DD62FC11CC473E0026B5B0 /* PcmBuffer.cpp in Sources */,
 				C7DD62FD11CC473E0026B5B0 /* SourceFile.cpp in Sources */,
+				FAE9B71011CD7FCF00DA1EBF /* CinderViewCTE.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -250,7 +250,6 @@ OutputImplAudioUnit::OutputImplAudioUnit()
 		std::cout << "Error 4" << std::endl;
 	}
 	
-	
 	ComponentResult err2 = noErr;
 	dsize = sizeof( AudioStreamBasicDescription );
 	mPlayerDescription = new AudioStreamBasicDescription;

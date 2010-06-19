@@ -37,6 +37,16 @@
 // so we'll just be renaming the iPhone ones to fit with the Mac
 
 
+#if defined(CINDER_MAC)
+	#define ComponentResult						long	
+#elif defined(CINDER_COCOA) && !defined(CINDER_MAC)
+	#define kAudioUnitSubType_StereoMixer		kAudioUnitSubType_MultiChannelMixer
+	#define kStereoMixerParam_Volume			kMultiChannelMixerParam_Volume
+	#define kAudioUnitSubType_DefaultOutput		kAudioUnitSubType_RemoteIO
+	#define ComponentDescription				AudioComponentDescription
+	#define ComponentResult						long	
+#endif
+
 
 namespace cinder { namespace audio {
 
