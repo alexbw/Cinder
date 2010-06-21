@@ -47,6 +47,11 @@ LoaderSourceFile::LoaderSourceFile( SourceFile *source, Target *target )
 	: mSource( source ), mPacketOffset( 0 )
 {
 	
+<<<<<<< HEAD
+=======
+	printf("Here's where we've got to do what we've gotta do.\n");
+	
+>>>>>>> iPhoneAudioAndEmbed
 	AudioStreamBasicDescription sourceDescription;
 	
 	sourceDescription.mFormatID = source->mNativeFormatId; //kAudioFormatLinearPCM;
@@ -65,7 +70,14 @@ LoaderSourceFile::LoaderSourceFile( SourceFile *source, Target *target )
 	}
 	
 
+<<<<<<< HEAD
+=======
+	printf("Okay, we've got the source description\n");
+		   
+>>>>>>> iPhoneAudioAndEmbed
 	//right now this always converts to linear PCM --that's probably ok
+	
+#if defined(CINDER_MAC)	
 	targetDescription.mFormatID = kAudioFormatLinearPCM; //target->mNativeFormatId;
 	targetDescription.mFormatFlags = CalculateLPCMFlags( target->getBitsPerSample(), target->getBlockAlign() * 8, target->isFloat(), target->isBigEndian(), ( ! target->isInterleaved() ) ); //target->mNativeFormatFlags
 	targetDescription.mSampleRate = target->getSampleRate();
@@ -75,8 +87,26 @@ LoaderSourceFile::LoaderSourceFile( SourceFile *source, Target *target )
 	targetDescription.mChannelsPerFrame = target->getChannelCount();
 	targetDescription.mBitsPerChannel = target->getBitsPerSample();
 	
-	mConverter = shared_ptr<CocoaCaConverter>( new CocoaCaConverter( this, &LoaderSourceFile::dataInputCallback, sourceDescription, targetDescription, mSource->mMaxPacketSize ) );
+#elif defined (CINDER_COCOA) && !defined(CINDER_MAC)
+	targetDescription.mSampleRate		= 44100.0f;
+	targetDescription.mFormatID			= kAudioFormatLinearPCM; //target->mNativeFormatId;
+	targetDescription.mFormatFlags		= kAudioFormatFlagsCanonical;
+	targetDescription.mBitsPerChannel	= 16;
+	targetDescription.mChannelsPerFrame	= source->getChannelCount();
+	targetDescription.mFramesPerPacket	= 1;
+	targetDescription.mBytesPerFrame	= (targetDescription.mBitsPerChannel / 8) * targetDescription.mChannelsPerFrame;
+	targetDescription.mBytesPerPacket	= targetDescription.mBytesPerFrame * targetDescription.mFramesPerPacket;
+#endif	
 
+	printf("Okay, we've done the target description\n");
+	
+	mConverter = shared_ptr<CocoaCaConverter>( new CocoaCaConverter( this, &LoaderSourceFile::dataInputCallback, sourceDescription, targetDescription, mSource->mMaxPacketSize ) );
+<<<<<<< HEAD
+
+=======
+	
+	printf("Okay, we've done the cocoacaconverter thingy\n");
+>>>>>>> iPhoneAudioAndEmbed
 }
 
 uint64_t LoaderSourceFile::getSampleOffset() const { 
@@ -140,7 +170,12 @@ void SourceFile::registerSelf()
 				while( ! res && extLen < 5 ) {
 					ext = new char[extLen];
 					res = CFStringGetCString( cfext, ext, extLen * sizeof(char), kCFStringEncodingASCII );
+<<<<<<< HEAD
 					std::cout << ext << std::endl;
+=======
+//					printf("Type: '%s',  Success? %d\n", ext, res);
+					
+>>>>>>> iPhoneAudioAndEmbed
 					if( res ) {
 						IoRegistrar::registerSourceType( ext, sourceFunc, SOURCE_PRIORITY );
 					}

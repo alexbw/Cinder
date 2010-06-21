@@ -23,6 +23,12 @@
 #include "cinder/audio/OutputImplAudioUnit.h"
 #include "cinder/audio/FftProcessor.h"
 #include "cinder/CinderMath.h"
+#include "cinder/audio/CAStreamBasicDescription.h"
+#include "cinder/audio/CAXException.h"
+#include "cinder/audio/CADebugMacros.h"
+
+#define kOutputBus 0
+#define kInputBus 1
 
 #include <iostream>
 
@@ -35,6 +41,10 @@ TargetOutputImplAudioUnit::TargetOutputImplAudioUnit( const OutputImplAudioUnit 
 OutputImplAudioUnit::Track::Track( SourceRef source, OutputImplAudioUnit * output )
 	: cinder::audio::Track(), mSource( source ), mOutput( output ), mIsPlaying( false), mIsLooping( false ), mIsPcmBuffering( false )
 {
+
+	// ABW: Something's wrong with the OutputImplAudioUnit as it's fed into this function
+	// on the iPhone platform
+	
 	mTarget = TargetOutputImplAudioUnit::createRef( output );
 	mLoader = source->createLoader( mTarget.get() );
 //	printf("What's the volume? %f\n", output->getVolume());
@@ -54,11 +64,25 @@ void OutputImplAudioUnit::Track::play()
 	AURenderCallbackStruct rcbs;
 	rcbs.inputProc = &OutputImplAudioUnit::Track::renderCallback;
 	rcbs.inputProcRefCon = (void *)this;
+//#if defined(CINDER_MAC)
+	OSStatus err = AudioUnitSetProperty( mOutput->mMixerUnit, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input, kOutputBus, &rcbs, sizeof(rcbs) );
+	XThrowIfError(err, "Couldn't setup the callback on the mixer unit");	
+//#elif defined(CINDER_COCOA) && !defined(CINDER_MAC)
+//	UInt32 numbuses = 1;
+//	UInt32 size = sizeof(UInt32);
+//	AudioUnitGetProperty(mOutput->mMixerUnit, kAudioUnitProperty_ElementCount, kAudioUnitScope_Input, 0, &numbuses, &size);
+//	OSStatus err;
+//	for (int i=0; i < numbuses; ++i) 
+//	{
+//		err = AudioUnitSetProperty(mOutput->mMixerUnit, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input, i, &rcbs, sizeof(rcbs));
+//		XThrowIfError(err, "Couldn't set up the callback on the mixer unit");
+//	}
+//#endif
 	
-	OSStatus err = AudioUnitSetProperty( mOutput->mMixerUnit, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input, mInputBus, &rcbs, sizeof(rcbs) );
 	if( err ) {
 		//throw
 	}
+	
 	mIsPlaying = true;
 }
 
@@ -114,11 +138,13 @@ PcmBuffer32fRef OutputImplAudioUnit::Track::getPcmBuffer()
 
 OSStatus OutputImplAudioUnit::Track::renderCallback( void * audioTrack, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData)
 {	
+	
 	OSStatus err = noErr;
 	
 	OutputImplAudioUnit::Track *theTrack = reinterpret_cast<OutputImplAudioUnit::Track *>( audioTrack );
 	LoaderRef theLoader = theTrack->mLoader;
 	
+	printf("How many buffers? %d\n", ioData->mNumberBuffers);
 	
 	if( ! theTrack->mIsPlaying ) {		
 		for( int i = 0; i < ioData->mNumberBuffers; i++ ) {
@@ -148,6 +174,9 @@ OSStatus OutputImplAudioUnit::Track::renderCallback( void * audioTrack, AudioUni
 		delete [] bufferList.mBuffers;
 		
 	}
+	
+	printf("We have loaded stuff for the playing\n");
+	
 	//save data into pcm buffer if it's enabled
 	/*if( theTrack->mPCMBufferEnabled ) {
 		if( theTrack->mPCMBuffer.mSampleIdx + ( ioData->mBuffers[0].mDataByteSize / sizeof(Float32) ) > theTrack->mPCMBuffer.mSamplesPerBuffer ) {
@@ -169,11 +198,13 @@ OSStatus OutputImplAudioUnit::Track::renderCallback( void * audioTrack, AudioUni
 			theTrack->mLoadingPcmBuffer = PcmBuffer32fRef( new PcmBuffer32f( bufferSampleCount, theTrack->mTarget->getChannelCount(), theTrack->mTarget->isInterleaved() ) );
 		}
 		
+		
 		for( int i = 0; i < ioData->mNumberBuffers; i++ ) {
 			//TODO: implement channel map to better deal with channel locations
 			theTrack->mLoadingPcmBuffer->appendChannelData( reinterpret_cast<float *>( ioData->mBuffers[i].mData ), ioData->mBuffers[0].mDataByteSize / sizeof(float), static_cast<ChannelIdentifier>( i ) );
 		}
-	 }
+	}
+
 	
 	if( ioData->mBuffers[0].mDataByteSize == 0 ) {
 		if( ! theTrack->mIsLooping ) {
@@ -193,6 +224,9 @@ OSStatus OutputImplAudioUnit::Track::renderCallback( void * audioTrack, AudioUni
 OutputImplAudioUnit::OutputImplAudioUnit()
 	: OutputImpl()
 {
+	
+#if defined(CINDER_MAC)
+	
 	OSStatus err = noErr;
 
 	NewAUGraph( &mGraph );
@@ -204,7 +238,7 @@ OutputImplAudioUnit::OutputImplAudioUnit()
 	
 	//output node
 	cd.componentType = kAudioUnitType_Output;
-	cd.componentSubType = kAudioUnitSubType_DefaultOutput;
+	cd.componentSubType = outputUnitType;
 	
 	//connect & setup
 	AUGraphOpen( mGraph );
@@ -219,6 +253,7 @@ OutputImplAudioUnit::OutputImplAudioUnit()
 	}
 	
 	UInt32 dsize;
+<<<<<<< HEAD
 	#if defined(CINDER_MAC) // on the iPhone, this is an unnecessary step
 		//get default output device id and set it as the outdevice for the output unit
 		dsize = sizeof( AudioDeviceID );
@@ -232,6 +267,19 @@ OutputImplAudioUnit::OutputImplAudioUnit()
 			std::cout << "Error setting current output device" << std::endl;
 		}
 	#endif
+=======
+	//get default output device id and set it as the outdevice for the output unit
+	dsize = sizeof( AudioDeviceID );
+	err = AudioHardwareGetProperty( kAudioHardwarePropertyDefaultOutputDevice, &dsize, &mOutputDeviceId );
+	if( err != noErr ) {
+		std::cout << "Error getting default output device" << std::endl;
+	}
+	
+	err = AudioUnitSetProperty( mOutputUnit, kAudioOutputUnitProperty_CurrentDevice, kAudioUnitScope_Global, 0, &mOutputDeviceId, sizeof( mOutputDeviceId ) );
+	if( err != noErr ) {
+		std::cout << "Error setting current output device" << std::endl;
+	}
+>>>>>>> iPhoneAudioAndEmbed
 	
 	//Tell the output unit not to reset timestamps 
 	//Otherwise sample rate changes will cause sync los
@@ -243,7 +291,7 @@ OutputImplAudioUnit::OutputImplAudioUnit()
 	
 	//stereo mixer node
 	cd.componentType = kAudioUnitType_Mixer;
-	cd.componentSubType = kAudioUnitSubType_StereoMixer;
+	cd.componentSubType = mixerUnitType;
 	AUGraphAddNode( mGraph, &cd, &mMixerNode );
 	
 	//setup mixer AU
@@ -260,6 +308,7 @@ OutputImplAudioUnit::OutputImplAudioUnit()
 		std::cout << "Error reading output unit stream format" << std::endl;
 	}
 	
+		
 	//TODO: cleanup error checking in all of this
 	err2 = AudioUnitSetProperty( mMixerUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, mPlayerDescription, dsize );
 	if( err2 ) {
@@ -297,6 +346,119 @@ OutputImplAudioUnit::OutputImplAudioUnit()
 	if( err ) {
 		//throw
 	}
+	
+	
+#elif defined(CINDER_COCOA) && !defined(CINDER_MAC) 
+	
+	OSStatus err = noErr;
+	
+	NewAUGraph( &mGraph );
+			
+	// Mixer component
+	AudioComponentDescription mixer_desc;
+	mixer_desc.componentType = kAudioUnitType_Mixer;
+	mixer_desc.componentSubType = kAudioUnitSubType_MultiChannelMixer;
+	mixer_desc.componentFlags = 0;
+	mixer_desc.componentFlagsMask = 0;
+	mixer_desc.componentManufacturer = kAudioUnitManufacturer_Apple;
+	
+	//  output component
+	AudioComponentDescription output_desc;
+	output_desc.componentType = kAudioUnitType_Output;
+	output_desc.componentSubType = kAudioUnitSubType_RemoteIO;
+	output_desc.componentFlags = 0;
+	output_desc.componentFlagsMask = 0;
+	output_desc.componentManufacturer = kAudioUnitManufacturer_Apple;
+	
+	// Add some nodes!
+	err = AUGraphAddNode(mGraph, &output_desc, &mOutputNode);
+	XThrowIfError(err, "Couldn't add the output node");
+	err = AUGraphAddNode(mGraph, &mixer_desc, &mMixerNode );
+	XThrowIfError(err, "Couldn't add the mixer node");
+	// Connect those nodes
+	err = AUGraphConnectNodeInput(mGraph, mMixerNode, 0, mOutputNode, 0);
+	XThrowIfError(err, "Couldn't connect the nodes");
+	// Open that graph! Da doo doo doo
+	err = AUGraphOpen(mGraph);
+	XThrowIfError(err, "Couldn't open the graph");
+	
+	// Get those units!
+	err = AUGraphNodeInfo(mGraph, mMixerNode, NULL, &mMixerUnit);
+	XThrowIfError(err, "Couldn't get the mixer unit");
+	err = AUGraphNodeInfo(mGraph, mOutputNode, NULL, &mOutputUnit);
+	XThrowIfError(err, "Couldn't get the output unit");
+	
+	// Set those buses!
+	UInt32 numbuses = 1;
+	err = AudioUnitSetProperty(mMixerUnit, kAudioUnitProperty_ElementCount, kAudioUnitScope_Input, 0, &numbuses, sizeof(UInt32));
+	XThrowIfError(err, "Couldn't set buses on the mixer");	
+
+	printf("I am here\n");
+	
+	CAStreamBasicDescription desc;
+	UInt32 size = sizeof(desc);
+	for (int i=0; i < numbuses; ++i) 
+	{
+		printf("I am there\n");
+		
+		err = AudioUnitGetProperty(mMixerUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, i, &desc, &size);
+		memset(&desc, 0, size);
+
+		// on the iPhone, we have to be explicit with our AudioStreamBasicDescription
+		desc.mSampleRate		= 44100.0f; // TODO: hardwired sample rate, not smart.
+		desc.mFormatID			= kAudioFormatLinearPCM;
+		desc.mFormatFlags		= kAudioFormatFlagsCanonical;
+		desc.mBitsPerChannel	= 16;
+		desc.mChannelsPerFrame	= 2;
+		desc.mFramesPerPacket	= 1;
+		desc.mBytesPerFrame		= (desc.mBitsPerChannel/8)*desc.mChannelsPerFrame;
+		desc.mBytesPerPacket	= desc.mBytesPerFrame * desc.mFramesPerPacket;
+
+		printf("I am now all the way over here\n");
+		
+		err = AudioUnitSetProperty(mMixerUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, i, &desc, size);
+		XThrowIfError(err, "Couldn't set the stream description on the mixer's input bus");
+		
+	}
+	
+	printf("And now I'm here\n");
+
+	UInt32 one = 1;
+	err = AudioUnitSetProperty(mOutputUnit, kAudioOutputUnitProperty_EnableIO, kAudioUnitScope_Input, kInputBus, &one, sizeof(one));
+	XThrowIfError(err, "Couldn't enable IO on the input scope of the IO unit");
+	err = AudioUnitSetProperty(mOutputUnit, kAudioOutputUnitProperty_EnableIO, kAudioUnitScope_Output, kOutputBus, &one, sizeof(one));
+	XThrowIfError(err, "Couldn't enable IO on the output scope of the IO unit");
+
+//	size = sizeof(desc);
+//	err = AudioUnitGetProperty(mOutputUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, kInputBus, &desc, &size);
+//	XThrowIfError(err, "Couldn't get the stream format on the output unit's output scope");
+//	
+//	memset(&desc, 0, sizeof(desc));
+//	desc.SetAUCanonical(2, true);
+//	desc.mSampleRate = 44100.0f;	
+	err = AudioUnitSetProperty(mOutputUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, kInputBus, &desc, size);
+	XThrowIfError(err, "Couldn't set the stream format on the output unit's output scope");
+	err = AudioUnitSetProperty(mOutputUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, kOutputBus, &desc, size);
+	XThrowIfError(err, "Couldn't set the stream format on the output unit's input scope");
+
+	mPlayerDescription = new AudioStreamBasicDescription;
+	memcpy(mPlayerDescription, &desc, sizeof(AudioStreamBasicDescription));
+	
+	err = AUGraphInitialize(mGraph);
+	XThrowIfError(err, "Couldn't initialize the graph");
+	
+	UInt32 data = 1;
+	err = AudioUnitSetProperty( mMixerUnit, kAudioUnitProperty_MeteringMode, kAudioUnitScope_Global, 0, &data, sizeof(data) );
+	XThrowIfError(err, "Couldn't set metering on the mixer unit");
+	
+	err = AUGraphStart( mGraph );
+	XThrowIfError(err, "Couldn't start the graph");
+	
+#endif
+	
+	
+	
+	
 }
 
 OutputImplAudioUnit::~OutputImplAudioUnit()
@@ -309,7 +471,13 @@ OutputImplAudioUnit::~OutputImplAudioUnit()
 
 TrackRef OutputImplAudioUnit::addTrack( SourceRef aSource, bool autoplay )
 {	
+<<<<<<< HEAD
 	shared_ptr<OutputImplAudioUnit::Track> track = shared_ptr<OutputImplAudioUnit::Track>( new OutputImplAudioUnit::Track( aSource, this ) );
+=======
+	
+	OutputImplAudioUnit::Track *thisTrack = new OutputImplAudioUnit::Track( aSource, this );	
+	shared_ptr<OutputImplAudioUnit::Track> track = shared_ptr<OutputImplAudioUnit::Track>( thisTrack );
+>>>>>>> iPhoneAudioAndEmbed
 	TrackId inputBus = track->getTrackId();
 	mTracks.insert( std::pair<TrackId,shared_ptr<OutputImplAudioUnit::Track> >( inputBus, track ) );
 	if( autoplay ) {
