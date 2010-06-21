@@ -24,7 +24,7 @@
 
 #include "cinder/Cinder.h"
 #include "cinder/audio/Io.h"
-#include "cinder/audio/Buffer.h"
+#include "cinder/audio/PcmBuffer.h"
 #include "cinder/audio/CocoaCaConverter.h"
 
 #include <AudioToolbox/AudioFile.h>
@@ -43,7 +43,7 @@ class LoaderSourceFile : public Loader {
 	
 	uint64_t getSampleOffset() const;
 	void setSampleOffset( uint64_t anOffset );
-	void loadData( uint32_t *ioSampleCount, BufferList *ioData );
+	void loadData( BufferList *ioData );
  private:
 	static void dataInputCallback( Loader* aLoader, uint32_t *ioSampleCount, BufferList *ioData, AudioStreamPacketDescription * packetDescriptions );
 
@@ -61,7 +61,7 @@ class SourceFile : public Source {
 	static SourceFileRef	createFileRef( DataSourceRef dataSourceRef );
 	~SourceFile();
 
-	virtual LoaderRef getLoader( Target *target ) { return LoaderSourceFile::createRef( this, target ); }
+	virtual LoaderRef createLoader( Target *target ) { return LoaderSourceFile::createRef( this, target ); }
 
 	double getDuration() const { return mDuration; };
 
