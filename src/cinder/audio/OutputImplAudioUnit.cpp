@@ -253,21 +253,7 @@ OutputImplAudioUnit::OutputImplAudioUnit()
 	}
 	
 	UInt32 dsize;
-<<<<<<< HEAD
-	#if defined(CINDER_MAC) // on the iPhone, this is an unnecessary step
-		//get default output device id and set it as the outdevice for the output unit
-		dsize = sizeof( AudioDeviceID );
-		err = AudioHardwareGetProperty( kAudioHardwarePropertyDefaultOutputDevice, &dsize, &mOutputDeviceId );
-		if( err != noErr ) {
-			std::cout << "Error getting default output device" << std::endl;
-		}
-		
-		err = AudioUnitSetProperty( mOutputUnit, kAudioOutputUnitProperty_CurrentDevice, kAudioUnitScope_Global, 0, &mOutputDeviceId, sizeof( mOutputDeviceId ) );
-		if( err != noErr ) {
-			std::cout << "Error setting current output device" << std::endl;
-		}
-	#endif
-=======
+
 	//get default output device id and set it as the outdevice for the output unit
 	dsize = sizeof( AudioDeviceID );
 	err = AudioHardwareGetProperty( kAudioHardwarePropertyDefaultOutputDevice, &dsize, &mOutputDeviceId );
@@ -279,7 +265,7 @@ OutputImplAudioUnit::OutputImplAudioUnit()
 	if( err != noErr ) {
 		std::cout << "Error setting current output device" << std::endl;
 	}
->>>>>>> iPhoneAudioAndEmbed
+
 	
 	//Tell the output unit not to reset timestamps 
 	//Otherwise sample rate changes will cause sync los
@@ -471,13 +457,8 @@ OutputImplAudioUnit::~OutputImplAudioUnit()
 
 TrackRef OutputImplAudioUnit::addTrack( SourceRef aSource, bool autoplay )
 {	
-<<<<<<< HEAD
 	shared_ptr<OutputImplAudioUnit::Track> track = shared_ptr<OutputImplAudioUnit::Track>( new OutputImplAudioUnit::Track( aSource, this ) );
-=======
-	
-	OutputImplAudioUnit::Track *thisTrack = new OutputImplAudioUnit::Track( aSource, this );	
-	shared_ptr<OutputImplAudioUnit::Track> track = shared_ptr<OutputImplAudioUnit::Track>( thisTrack );
->>>>>>> iPhoneAudioAndEmbed
+
 	TrackId inputBus = track->getTrackId();
 	mTracks.insert( std::pair<TrackId,shared_ptr<OutputImplAudioUnit::Track> >( inputBus, track ) );
 	if( autoplay ) {

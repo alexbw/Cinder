@@ -40,19 +40,12 @@
 
 #if defined(CINDER_MAC)
 	#define ComponentResult						long	
-<<<<<<< HEAD
-#elif defined(CINDER_COCOA) && !defined(CINDER_MAC)
-	#define kAudioUnitSubType_StereoMixer		kAudioUnitSubType_MultiChannelMixer
-	#define kStereoMixerParam_Volume			kMultiChannelMixerParam_Volume
-	#define kAudioUnitSubType_DefaultOutput		kAudioUnitSubType_RemoteIO
-=======
 	#define mixerUnitType						kAudioUnitSubType_StereoMixer
 	#define outputUnitType						kAudioUnitSubType_DefaultOutput
 #elif defined(CINDER_COCOA) && !defined(CINDER_MAC)
 	#define mixerUnitType						kAudioUnitSubType_MultiChannelMixer
 	#define kStereoMixerParam_Volume			kMultiChannelMixerParam_Volume
 	#define outputUnitType						kAudioUnitSubType_RemoteIO
->>>>>>> iPhoneAudioAndEmbed
 	#define ComponentDescription				AudioComponentDescription
 	#define ComponentResult						long	
 #endif
