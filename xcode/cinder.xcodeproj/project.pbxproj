@@ -645,6 +645,27 @@
 		D2AAC088055469A000DB518D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 		EAC3D1A91011F2E700FFBC9E /* Serial.h in Headers */ = {isa = PBXBuildFile; fileRef = EAC3D1A81011F2E700FFBC9E /* Serial.h */; };
 		EAC3D1AD1011F3AC00FFBC9E /* Serial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EAC3D1AB1011F3AC00FFBC9E /* Serial.cpp */; };
+		FADA109D11CFEF4800719620 /* OutputImplAudioUnit.h in Headers */ = {isa = PBXBuildFile; fileRef = FADA109C11CFEF4800719620 /* OutputImplAudioUnit.h */; };
+		FADA109E11CFEF4800719620 /* OutputImplAudioUnit.h in Headers */ = {isa = PBXBuildFile; fileRef = FADA109C11CFEF4800719620 /* OutputImplAudioUnit.h */; };
+		FADA109F11CFEF4800719620 /* OutputImplAudioUnit.h in Headers */ = {isa = PBXBuildFile; fileRef = FADA109C11CFEF4800719620 /* OutputImplAudioUnit.h */; };
+		FADA116311CFFB8600719620 /* CAStreamBasicDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FADA116111CFFB8600719620 /* CAStreamBasicDescription.cpp */; };
+		FADA116411CFFB8600719620 /* CAStreamBasicDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = FADA116211CFFB8600719620 /* CAStreamBasicDescription.h */; };
+		FADA116511CFFB8600719620 /* CAStreamBasicDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FADA116111CFFB8600719620 /* CAStreamBasicDescription.cpp */; };
+		FADA116611CFFB8600719620 /* CAStreamBasicDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = FADA116211CFFB8600719620 /* CAStreamBasicDescription.h */; };
+		FADA117B11CFFCD900719620 /* CADebugMacros.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FADA117611CFFCD900719620 /* CADebugMacros.cpp */; };
+		FADA117C11CFFCD900719620 /* CADebugMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = FADA117711CFFCD900719620 /* CADebugMacros.h */; };
+		FADA117D11CFFCD900719620 /* CAMath.h in Headers */ = {isa = PBXBuildFile; fileRef = FADA117811CFFCD900719620 /* CAMath.h */; };
+		FADA117E11CFFCD900719620 /* CAXException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FADA117911CFFCD900719620 /* CAXException.cpp */; };
+		FADA117F11CFFCD900719620 /* CAXException.h in Headers */ = {isa = PBXBuildFile; fileRef = FADA117A11CFFCD900719620 /* CAXException.h */; };
+		FADA118011CFFCD900719620 /* CADebugMacros.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FADA117611CFFCD900719620 /* CADebugMacros.cpp */; };
+		FADA118111CFFCD900719620 /* CADebugMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = FADA117711CFFCD900719620 /* CADebugMacros.h */; };
+		FADA118211CFFCD900719620 /* CAMath.h in Headers */ = {isa = PBXBuildFile; fileRef = FADA117811CFFCD900719620 /* CAMath.h */; };
+		FADA118311CFFCD900719620 /* CAXException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FADA117911CFFCD900719620 /* CAXException.cpp */; };
+		FADA118411CFFCD900719620 /* CAXException.h in Headers */ = {isa = PBXBuildFile; fileRef = FADA117A11CFFCD900719620 /* CAXException.h */; };
+		FADA128411D0046200719620 /* CADebugPrintf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FADA128211D0046200719620 /* CADebugPrintf.cpp */; };
+		FADA128511D0046200719620 /* CADebugPrintf.h in Headers */ = {isa = PBXBuildFile; fileRef = FADA128311D0046200719620 /* CADebugPrintf.h */; };
+		FADA128611D0046200719620 /* CADebugPrintf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FADA128211D0046200719620 /* CADebugPrintf.cpp */; };
+		FADA128711D0046200719620 /* CADebugPrintf.h in Headers */ = {isa = PBXBuildFile; fileRef = FADA128311D0046200719620 /* CADebugPrintf.h */; };
 		FAE9B70D11CD7FBB00DA1EBF /* CinderViewCTE.h in Headers */ = {isa = PBXBuildFile; fileRef = FAE9B70C11CD7FBB00DA1EBF /* CinderViewCTE.h */; };
 		FAE9B70E11CD7FBB00DA1EBF /* CinderViewCTE.h in Headers */ = {isa = PBXBuildFile; fileRef = FAE9B70C11CD7FBB00DA1EBF /* CinderViewCTE.h */; };
 		FAE9B71011CD7FCF00DA1EBF /* CinderViewCTE.mm in Sources */ = {isa = PBXBuildFile; fileRef = FAE9B70F11CD7FCF00DA1EBF /* CinderViewCTE.mm */; };
@@ -925,6 +946,16 @@
 		D2F7E8BE07B2D77200F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		EAC3D1A81011F2E700FFBC9E /* Serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Serial.h; sourceTree = "<group>"; };
 		EAC3D1AB1011F3AC00FFBC9E /* Serial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Serial.cpp; sourceTree = "<group>"; };
+		FADA109C11CFEF4800719620 /* OutputImplAudioUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OutputImplAudioUnit.h; sourceTree = "<group>"; };
+		FADA116111CFFB8600719620 /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAStreamBasicDescription.cpp; sourceTree = "<group>"; };
+		FADA116211CFFB8600719620 /* CAStreamBasicDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAStreamBasicDescription.h; sourceTree = "<group>"; };
+		FADA117611CFFCD900719620 /* CADebugMacros.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CADebugMacros.cpp; sourceTree = "<group>"; };
+		FADA117711CFFCD900719620 /* CADebugMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CADebugMacros.h; sourceTree = "<group>"; };
+		FADA117811CFFCD900719620 /* CAMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAMath.h; sourceTree = "<group>"; };
+		FADA117911CFFCD900719620 /* CAXException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAXException.cpp; sourceTree = "<group>"; };
+		FADA117A11CFFCD900719620 /* CAXException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAXException.h; sourceTree = "<group>"; };
+		FADA128211D0046200719620 /* CADebugPrintf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CADebugPrintf.cpp; sourceTree = "<group>"; };
+		FADA128311D0046200719620 /* CADebugPrintf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CADebugPrintf.h; sourceTree = "<group>"; };
 		FAE9B70C11CD7FBB00DA1EBF /* CinderViewCTE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CinderViewCTE.h; path = app/CinderViewCTE.h; sourceTree = "<group>"; };
 		FAE9B70F11CD7FCF00DA1EBF /* CinderViewCTE.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CinderViewCTE.mm; path = app/CinderViewCTE.mm; sourceTree = "<group>"; };
 		FAE9B72111CD80A300DA1EBF /* FftProcessorImplGeneric.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FftProcessorImplGeneric.cpp; sourceTree = "<group>"; };
@@ -1425,6 +1456,8 @@
 		C7BA405B0FA8BEFD00AADC07 /* audio */ = {
 			isa = PBXGroup;
 			children = (
+				FADA117311CFFC5A00719620 /* CAUtilities */,
+				FADA109C11CFEF4800719620 /* OutputImplAudioUnit.h */,
 				C7DD62BE11CC471D0026B5B0 /* Callback.h */,
 				C7DD62BF11CC471D0026B5B0 /* CocoaCaConverter.h */,
 				C7DD62C011CC471D0026B5B0 /* FftProcessor.h */,
@@ -1508,6 +1541,22 @@
 				C7CDF0080EBD5DA4000997D3 /* xpath_syntax.h */,
 			);
 			name = include;
+			sourceTree = "<group>";
+		};
+		FADA117311CFFC5A00719620 /* CAUtilities */ = {
+			isa = PBXGroup;
+			children = (
+				FADA128211D0046200719620 /* CADebugPrintf.cpp */,
+				FADA128311D0046200719620 /* CADebugPrintf.h */,
+				FADA117611CFFCD900719620 /* CADebugMacros.cpp */,
+				FADA117711CFFCD900719620 /* CADebugMacros.h */,
+				FADA117811CFFCD900719620 /* CAMath.h */,
+				FADA117911CFFCD900719620 /* CAXException.cpp */,
+				FADA117A11CFFCD900719620 /* CAXException.h */,
+				FADA116111CFFB8600719620 /* CAStreamBasicDescription.cpp */,
+				FADA116211CFFB8600719620 /* CAStreamBasicDescription.h */,
+			);
+			name = CAUtilities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1634,6 +1683,12 @@
 				FAE9B70E11CD7FBB00DA1EBF /* CinderViewCTE.h in Headers */,
 				FAE9B72C11CD80D700DA1EBF /* FftProcessorImplGeneric.h in Headers */,
 				FAE9B73211CD80EA00DA1EBF /* fft4g.h in Headers */,
+				FADA109E11CFEF4800719620 /* OutputImplAudioUnit.h in Headers */,
+				FADA116411CFFB8600719620 /* CAStreamBasicDescription.h in Headers */,
+				FADA117C11CFFCD900719620 /* CADebugMacros.h in Headers */,
+				FADA117D11CFFCD900719620 /* CAMath.h in Headers */,
+				FADA117F11CFFCD900719620 /* CAXException.h in Headers */,
+				FADA128511D0046200719620 /* CADebugPrintf.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1758,6 +1813,12 @@
 				FAE9B70D11CD7FBB00DA1EBF /* CinderViewCTE.h in Headers */,
 				FAE9B72B11CD80D700DA1EBF /* FftProcessorImplGeneric.h in Headers */,
 				FAE9B73111CD80EA00DA1EBF /* fft4g.h in Headers */,
+				FADA109F11CFEF4800719620 /* OutputImplAudioUnit.h in Headers */,
+				FADA116611CFFB8600719620 /* CAStreamBasicDescription.h in Headers */,
+				FADA118111CFFCD900719620 /* CADebugMacros.h in Headers */,
+				FADA118211CFFCD900719620 /* CAMath.h in Headers */,
+				FADA118411CFFCD900719620 /* CAXException.h in Headers */,
+				FADA128711D0046200719620 /* CADebugPrintf.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1891,6 +1952,7 @@
 				C7DD62CD11CC471D0026B5B0 /* SourceFile.h in Headers */,
 				FAE9B72D11CD80D700DA1EBF /* FftProcessorImplGeneric.h in Headers */,
 				FAE9B73311CD80EA00DA1EBF /* fft4g.h in Headers */,
+				FADA109D11CFEF4800719620 /* OutputImplAudioUnit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2054,6 +2116,10 @@
 				FAE9B71111CD7FCF00DA1EBF /* CinderViewCTE.mm in Sources */,
 				FAE9B72311CD80A300DA1EBF /* FftProcessorImplGeneric.cpp in Sources */,
 				FAE9B73611CD80F000DA1EBF /* fft4g.cpp in Sources */,
+				FADA116311CFFB8600719620 /* CAStreamBasicDescription.cpp in Sources */,
+				FADA117B11CFFCD900719620 /* CADebugMacros.cpp in Sources */,
+				FADA117E11CFFCD900719620 /* CAXException.cpp in Sources */,
+				FADA128411D0046200719620 /* CADebugPrintf.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2142,6 +2208,10 @@
 				FAE9B71011CD7FCF00DA1EBF /* CinderViewCTE.mm in Sources */,
 				FAE9B72211CD80A300DA1EBF /* FftProcessorImplGeneric.cpp in Sources */,
 				FAE9B73511CD80F000DA1EBF /* fft4g.cpp in Sources */,
+				FADA116511CFFB8600719620 /* CAStreamBasicDescription.cpp in Sources */,
+				FADA118011CFFCD900719620 /* CADebugMacros.cpp in Sources */,
+				FADA118311CFFCD900719620 /* CAXException.cpp in Sources */,
+				FADA128611D0046200719620 /* CADebugPrintf.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2336,12 +2406,14 @@
 				CHECKED_STL = "-D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = cinder_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				INSTALL_PATH = /usr/local/lib;
@@ -2358,6 +2430,7 @@
 				PRODUCT_NAME = "cinder-iphone-sim_d";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = iphonesimulator3.1;
+				STRIP_STYLE = debugging;
 				VALID_ARCHS = i386;
 			};
 			name = Debug;

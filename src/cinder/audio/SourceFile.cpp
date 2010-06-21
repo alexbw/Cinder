@@ -47,6 +47,8 @@ LoaderSourceFile::LoaderSourceFile( SourceFile *source, Target *target )
 	: mSource( source ), mPacketOffset( 0 )
 {
 	
+	printf("Here's where we've got to do what we've gotta do.\n");
+	
 	AudioStreamBasicDescription sourceDescription;
 	
 	sourceDescription.mFormatID = source->mNativeFormatId; //kAudioFormatLinearPCM;
@@ -65,6 +67,8 @@ LoaderSourceFile::LoaderSourceFile( SourceFile *source, Target *target )
 	}
 	
 
+	printf("Okay, we've got the source description\n");
+		   
 	//right now this always converts to linear PCM --that's probably ok
 	targetDescription.mFormatID = kAudioFormatLinearPCM; //target->mNativeFormatId;
 	targetDescription.mFormatFlags = CalculateLPCMFlags( target->getBitsPerSample(), target->getBlockAlign() * 8, target->isFloat(), target->isBigEndian(), ( ! target->isInterleaved() ) ); //target->mNativeFormatFlags
@@ -74,9 +78,12 @@ LoaderSourceFile::LoaderSourceFile( SourceFile *source, Target *target )
 	targetDescription.mBytesPerFrame = ( mSource->getBlockAlign() ); //target->mBytesPerFrame;
 	targetDescription.mChannelsPerFrame = target->getChannelCount();
 	targetDescription.mBitsPerChannel = target->getBitsPerSample();
+		
+	printf("Okay, we've done the target description\n");
 	
 	mConverter = shared_ptr<CocoaCaConverter>( new CocoaCaConverter( this, &LoaderSourceFile::dataInputCallback, sourceDescription, targetDescription, mSource->mMaxPacketSize ) );
-
+	
+	printf("Okay, we've done the cocoacaconverter thingy\n");
 }
 
 uint64_t LoaderSourceFile::getSampleOffset() const { 
@@ -140,7 +147,8 @@ void SourceFile::registerSelf()
 				while( ! res && extLen < 5 ) {
 					ext = new char[extLen];
 					res = CFStringGetCString( cfext, ext, extLen * sizeof(char), kCFStringEncodingASCII );
-					std::cout << ext << std::endl;
+//					printf("Type: '%s',  Success? %d\n", ext, res);
+					
 					if( res ) {
 						IoRegistrar::registerSourceType( ext, sourceFunc, SOURCE_PRIORITY );
 					}

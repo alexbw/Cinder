@@ -173,6 +173,7 @@ void IoRegistrar::registerSourceType( string extension, SourceCreationFunc func,
 
 void IoRegistrar::Inst::registerSourceType( string extension, SourceCreationFunc func, int32_t priority )
 {
+	
 	// make sure the extension is all lower-case
 	std::transform( extension.begin(), extension.end(), extension.begin(), static_cast<int(*)(int)>(tolower) );	
 	
@@ -183,12 +184,15 @@ void IoRegistrar::Inst::registerSourceType( string extension, SourceCreationFunc
 			if( existIt->second == func )
 				return;
 		sIt->second.insert( make_pair( priority, func ) );
+
 	}
 	else {
 		multimap<int32_t,SourceCreationFunc> newMap;
 		newMap.insert( make_pair( priority, func ) );
 		mSources.insert( make_pair( extension, newMap ) );
 	}
+	
+	
 }
 
 void IoRegistrar::registerSourceGeneric( SourceCreationFunc func, int32_t priority ) 
@@ -198,6 +202,7 @@ void IoRegistrar::registerSourceGeneric( SourceCreationFunc func, int32_t priori
 
 void IoRegistrar::Inst::registerSourceGeneric( SourceCreationFunc func, int32_t priority )
 {
+		
 		mGenericSources.insert( make_pair( priority, func ) );
 }
 

@@ -26,6 +26,7 @@
 
 //#include <CoreServices/CoreServices.h>
 #include <CoreAudio/CoreAudioTypes.h>
+#include <AudioToolbox/AudioToolbox.h>
 #include <AudioUnit/AudioUnit.h>
 #include <AudioToolbox/AUGraph.h>
 #include <boost/thread/mutex.hpp>
@@ -39,10 +40,12 @@
 
 #if defined(CINDER_MAC)
 	#define ComponentResult						long	
+	#define mixerUnitType						kAudioUnitSubType_StereoMixer
+	#define outputUnitType						kAudioUnitSubType_DefaultOutput
 #elif defined(CINDER_COCOA) && !defined(CINDER_MAC)
-	#define kAudioUnitSubType_StereoMixer		kAudioUnitSubType_MultiChannelMixer
+	#define mixerUnitType						kAudioUnitSubType_MultiChannelMixer
 	#define kStereoMixerParam_Volume			kMultiChannelMixerParam_Volume
-	#define kAudioUnitSubType_DefaultOutput		kAudioUnitSubType_RemoteIO
+	#define outputUnitType						kAudioUnitSubType_RemoteIO
 	#define ComponentDescription				AudioComponentDescription
 	#define ComponentResult						long	
 #endif
