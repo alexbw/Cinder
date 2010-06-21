@@ -29,7 +29,7 @@
 namespace cinder { namespace audio {
 
 TargetOutputImplAudioUnit::TargetOutputImplAudioUnit( const OutputImplAudioUnit *aOutput ) {
-		loadFromCaAudioStreamBasicDescription( this, aOutput->mPlayerDescription );
+	loadFromCaAudioStreamBasicDescription( this, aOutput->mPlayerDescription );
 }
 
 OutputImplAudioUnit::Track::Track( SourceRef source, OutputImplAudioUnit * output )
@@ -37,7 +37,9 @@ OutputImplAudioUnit::Track::Track( SourceRef source, OutputImplAudioUnit * outpu
 {
 	mTarget = TargetOutputImplAudioUnit::createRef( output );
 	mLoader = source->createLoader( mTarget.get() );
-	mInputBus = output->availableTrackId();
+//	printf("What's the volume? %f\n", output->getVolume());
+//	printf("Available track ID: %d\n",output->availableTrackId());
+//	mInputBus = output->availableTrackId();
 }
 
 OutputImplAudioUnit::Track::~Track() 
@@ -195,7 +197,7 @@ OutputImplAudioUnit::OutputImplAudioUnit()
 
 	NewAUGraph( &mGraph );
 	
-	ComponentDescription cd;
+	AudioComponentDescription cd;
 	cd.componentManufacturer = kAudioUnitManufacturer_Apple;
 	cd.componentFlags = 0;
 	cd.componentFlagsMask = 0;
@@ -216,17 +218,20 @@ OutputImplAudioUnit::OutputImplAudioUnit()
 		std::cout << "Error 2!" << std::endl;	
 	}
 	
-	//get default output device id and set it as the outdevice for the output unit
-	UInt32 dsize = sizeof( AudioDeviceID );
-	err = AudioHardwareGetProperty( kAudioHardwarePropertyDefaultOutputDevice, &dsize, &mOutputDeviceId );
-	if( err != noErr ) {
-		std::cout << "Error getting default output device" << std::endl;
-	}
-	
-	err = AudioUnitSetProperty( mOutputUnit, kAudioOutputUnitProperty_CurrentDevice, kAudioUnitScope_Global, 0, &mOutputDeviceId, sizeof( mOutputDeviceId ) );
-	if( err != noErr ) {
-		std::cout << "Error setting current output device" << std::endl;
-	}
+	UInt32 dsize;
+	#if defined(CINDER_MAC) // on the iPhone, this is an unnecessary step
+		//get default output device id and set it as the outdevice for the output unit
+		dsize = sizeof( AudioDeviceID );
+		err = AudioHardwareGetProperty( kAudioHardwarePropertyDefaultOutputDevice, &dsize, &mOutputDeviceId );
+		if( err != noErr ) {
+			std::cout << "Error getting default output device" << std::endl;
+		}
+		
+		err = AudioUnitSetProperty( mOutputUnit, kAudioOutputUnitProperty_CurrentDevice, kAudioUnitScope_Global, 0, &mOutputDeviceId, sizeof( mOutputDeviceId ) );
+		if( err != noErr ) {
+			std::cout << "Error setting current output device" << std::endl;
+		}
+	#endif
 	
 	//Tell the output unit not to reset timestamps 
 	//Otherwise sample rate changes will cause sync los
@@ -246,7 +251,6 @@ OutputImplAudioUnit::OutputImplAudioUnit()
 	if( err ) {
 		std::cout << "Error 4" << std::endl;
 	}
-	
 	
 	ComponentResult err2 = noErr;
 	dsize = sizeof( AudioStreamBasicDescription );
@@ -304,7 +308,7 @@ OutputImplAudioUnit::~OutputImplAudioUnit()
 }
 
 TrackRef OutputImplAudioUnit::addTrack( SourceRef aSource, bool autoplay )
-{
+{	
 	shared_ptr<OutputImplAudioUnit::Track> track = shared_ptr<OutputImplAudioUnit::Track>( new OutputImplAudioUnit::Track( aSource, this ) );
 	TrackId inputBus = track->getTrackId();
 	mTracks.insert( std::pair<TrackId,shared_ptr<OutputImplAudioUnit::Track> >( inputBus, track ) );
@@ -341,6 +345,11 @@ void OutputImplAudioUnit::setVolume( float aVolume )
 	if( err ) {
 		//throw
 	}
+}
+
+TargetRef OutputImplAudioUnit::getTarget()
+{
+	return TargetOutputImplAudioUnit::createRef( this );
 }
 
 }} //namespace

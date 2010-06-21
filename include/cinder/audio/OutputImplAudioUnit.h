@@ -24,11 +24,29 @@
 
 #include "cinder/audio/Output.h"
 
-#include <CoreServices/CoreServices.h>
+//#include <CoreServices/CoreServices.h>
 #include <CoreAudio/CoreAudioTypes.h>
 #include <AudioUnit/AudioUnit.h>
 #include <AudioToolbox/AUGraph.h>
 #include <boost/thread/mutex.hpp>
+
+// ABW: this wasn't here before... should it stay here?
+#include "OutputImplAudioUnit.h"
+
+// Audio unit parameters have slightly different names on the Mac and the iPhone...
+// so we'll just be renaming the iPhone ones to fit with the Mac
+
+
+#if defined(CINDER_MAC)
+	#define ComponentResult						long	
+#elif defined(CINDER_COCOA) && !defined(CINDER_MAC)
+	#define kAudioUnitSubType_StereoMixer		kAudioUnitSubType_MultiChannelMixer
+	#define kStereoMixerParam_Volume			kMultiChannelMixerParam_Volume
+	#define kAudioUnitSubType_DefaultOutput		kAudioUnitSubType_RemoteIO
+	#define ComponentDescription				AudioComponentDescription
+	#define ComponentResult						long	
+#endif
+
 
 namespace cinder { namespace audio {
 
@@ -36,7 +54,9 @@ class OutputImplAudioUnit;
 
 class TargetOutputImplAudioUnit : public Target {
   public: 
-	static shared_ptr<TargetOutputImplAudioUnit> createRef( const OutputImplAudioUnit *aOutput ){ return shared_ptr<TargetOutputImplAudioUnit>( new TargetOutputImplAudioUnit( aOutput ) );  };
+	static shared_ptr<TargetOutputImplAudioUnit> createRef( const OutputImplAudioUnit *aOutput ){ 
+		return shared_ptr<TargetOutputImplAudioUnit>( new TargetOutputImplAudioUnit( aOutput ) );  
+	};
 	~TargetOutputImplAudioUnit() {}
   private:
 	TargetOutputImplAudioUnit( const OutputImplAudioUnit *aOutput );
@@ -55,8 +75,12 @@ class OutputImplAudioUnit : public OutputImpl {
 	
 	void setVolume( float aVolume );
 	float getVolume() const;
+	
+	TargetRef getTarget();
   private:
-	AudioDeviceID					mOutputDeviceId;
+	#if defined(CINDER_MAC)
+		AudioDeviceID					mOutputDeviceId;
+	#endif
 	AUGraph							mGraph;
 	AUNode							mMixerNode;
 	AUNode							mOutputNode;

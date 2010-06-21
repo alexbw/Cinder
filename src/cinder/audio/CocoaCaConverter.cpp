@@ -27,12 +27,13 @@ namespace cinder { namespace audio {
 CocoaCaConverter::CocoaCaConverter( Loader * aLoader, LoaderFunction loaderFn, const AudioStreamBasicDescription& sourceDescription, const AudioStreamBasicDescription& targetDescription, uint32_t maxPacketSize )
 	: mLoader( aLoader ), mCurrentPacketDescriptions( NULL ), mLoaderFunction( loaderFn ), mMaxPacketSize( maxPacketSize )
 {	
+
 	mConverterBuffer.mNumberBuffers = 0;
-	mConverterBuffer.mBuffers = NULL;
-	
+	mConverterBuffer.mBuffers = NULL;	
 	OSStatus err = noErr;
 	err = AudioConverterNew( &sourceDescription, &targetDescription, &mConverter );
 	if( err ) {
+		printf("ERR: %d\n", err);
 		throw IoExceptionUnsupportedDataFormat();
 		/*switch(err) {
 			case kAudioConverterErr_FormatNotSupported:
@@ -67,6 +68,8 @@ CocoaCaConverter::CocoaCaConverter( Loader * aLoader, LoaderFunction loaderFn, c
 			break;
 		}*/
 	}
+	
+
 }
 
 CocoaCaConverter::~CocoaCaConverter()

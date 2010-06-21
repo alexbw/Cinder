@@ -39,6 +39,7 @@ OutputImpl::OutputImpl()
 
 OutputImpl* Output::instance()
 {
+
 	static shared_ptr<OutputPlatformImpl> sInst;
 	if( ! sInst ) {
 		sInst = shared_ptr<OutputPlatformImpl>( new OutputPlatformImpl() );

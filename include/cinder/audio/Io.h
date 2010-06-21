@@ -31,6 +31,10 @@
 
 #if defined(CINDER_MAC)
 	#include <AudioToolbox/AudioFile.h>
+#elif defined(CINDER_COCOA)
+	#include <AudioToolbox/AudioToolbox.h>
+	#include <AudioUnit/AudioUnit.h>
+	#include <AudioToolbox/AudioFile.h>
 #elif defined(CINDER_MSW)
 	#include <windows.h>
 	#include <mmsystem.h> 
@@ -39,6 +43,7 @@
 namespace cinder { namespace audio {
 
 typedef shared_ptr<class Source>		SourceRef;
+typedef shared_ptr<class Target>		TargetRef;
 typedef shared_ptr<class Loader>		LoaderRef;
 
 class Io {
