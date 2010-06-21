@@ -131,6 +131,8 @@ class OutputImplAudioUnit : public OutputImpl {
 		
 		PcmBuffer32fRef	mLoadingPcmBuffer;
 		PcmBuffer32fRef	mLoadedPcmBuffer;
+		
+		
 		boost::mutex	mPcmBufferMutex;
 	};
 	

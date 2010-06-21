@@ -95,7 +95,7 @@ class PcmBufferT {
 typedef PcmBufferT<float> PcmBuffer32f;
 
 typedef shared_ptr<PcmBuffer32f> PcmBuffer32fRef;
-
+	
 class PcmBufferException : public Exception {
 };
 

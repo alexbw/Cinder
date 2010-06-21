@@ -140,6 +140,8 @@ PcmBuffer32fRef OutputImplAudioUnit::Track::getPcmBuffer()
 OSStatus OutputImplAudioUnit::Track::renderCallback( void * audioTrack, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData)
 {	
 	
+	printf("We are in the callback\n");
+	
 	OSStatus err = noErr;
 	
 	OutputImplAudioUnit::Track *theTrack = reinterpret_cast<OutputImplAudioUnit::Track *>( audioTrack );
@@ -175,6 +177,8 @@ OSStatus OutputImplAudioUnit::Track::renderCallback( void * audioTrack, AudioUni
 		
 	}
 	
+	printf("We have loaded stuff for the playing\n");
+	
 	//save data into pcm buffer if it's enabled
 	/*if( theTrack->mPCMBufferEnabled ) {
 		if( theTrack->mPCMBuffer.mSampleIdx + ( ioData->mBuffers[0].mDataByteSize / sizeof(Float32) ) > theTrack->mPCMBuffer.mSamplesPerBuffer ) {
@@ -196,11 +200,35 @@ OSStatus OutputImplAudioUnit::Track::renderCallback( void * audioTrack, AudioUni
 			theTrack->mLoadingPcmBuffer = PcmBuffer32fRef( new PcmBuffer32f( bufferSampleCount, theTrack->mTarget->getChannelCount(), theTrack->mTarget->isInterleaved() ) );
 		}
 		
+		
+		printf("Okay, here we are\n");
+		
+#if defined(CINDER_MAC)
+		printf("What the fuuuuuuck\n");
 		for( int i = 0; i < ioData->mNumberBuffers; i++ ) {
 			//TODO: implement channel map to better deal with channel locations
 			theTrack->mLoadingPcmBuffer->appendChannelData( reinterpret_cast<float *>( ioData->mBuffers[i].mData ), ioData->mBuffers[0].mDataByteSize / sizeof(float), static_cast<ChannelIdentifier>( i ) );
 		}
-	 }
+	
+#elif defined(CINDER_COCOA) && !defined(CINDER_MAC)
+		printf("YES let's get some samples\n");
+		for( int i = 0; i < ioData->mNumberBuffers; i++ ) {
+			//TODO: implement channel map to better deal with channel locations
+			// ABW: We have to convert out from SInt16's to floats for the iPhone. It's nigh impossible to get floats out of the iPhone mic
+			
+			int numSamples = ioData->mBuffers[0].mDataByteSize / sizeof(float);
+			float *properTypeBuffer = new float[numSamples];
+			SInt16 *originalTypeBuffer = (SInt16 *)ioData->mBuffers[i].mData;
+			for (int j=0; j < numSamples; ++j)
+				properTypeBuffer[j] = (float)originalTypeBuffer[j];
+			
+			theTrack->mLoadingPcmBuffer->appendChannelData( properTypeBuffer, numSamples, static_cast<ChannelIdentifier>( i ) );
+			
+			delete [] properTypeBuffer;
+		}
+#endif
+	}
+
 	
 	if( ioData->mBuffers[0].mDataByteSize == 0 ) {
 		if( ! theTrack->mIsLooping ) {
@@ -391,21 +419,18 @@ OutputImplAudioUnit::OutputImplAudioUnit()
 		// on the iPhone, we have to be explicit with our AudioStreamBasicDescription
 		desc.mSampleRate		= 44100.0f; // TODO: hardwired sample rate, not smart.
 		desc.mFormatID			= kAudioFormatLinearPCM;
-		desc.mFormatFlags		= kAudioFormatFlagIsSignedInteger | kAudioFormatFlagsNativeEndian | kLinearPCMFormatFlagIsNonInterleaved;
+		desc.mFormatFlags		= kAudioFormatFlagsCanonical;
 		desc.mBitsPerChannel	= 16;
 		desc.mChannelsPerFrame	= 1;
 		desc.mFramesPerPacket	= 1;
-		desc.mBytesPerFrame		= (desc.mBitsPerChannel / 8) * desc.mChannelsPerFrame;
-		desc.mBytesPerPacket	= desc.mBytesPerFrame * desc.mFramesPerPacket;
+		desc.mBytesPerFrame		= 2;
+		desc.mBytesPerPacket	= 2;
 
 		printf("I am now all the way over here\n");
 		
 		err = AudioUnitSetProperty(mMixerUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, i, &desc, size);
 		XThrowIfError(err, "Couldn't set the stream description on the mixer's input bus");
-//		err = AudioUnitSetProperty(mMixerUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, i, &desc, size);
-//		XThrowIfError(err, "Couldn't set the stream description on the mixer's output bus");
 		
-		printf("Output format: "); desc.Print();
 	}
 	
 	printf("And now I'm here\n");
@@ -421,14 +446,12 @@ OutputImplAudioUnit::OutputImplAudioUnit()
 	XThrowIfError(err, "Couldn't get the stream format on the output unit's output scope");
 	
 	memset(&desc, 0, sizeof(desc));
-	desc.SetAUCanonical(1, true);
+	desc.SetAUCanonical(numbuses, true);
 	desc.mSampleRate = 44100.0f;	
 	err = AudioUnitSetProperty(mOutputUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, kInputBus, &desc, size);
 	XThrowIfError(err, "Couldn't set the stream format on the output unit's output scope");
 	err = AudioUnitSetProperty(mOutputUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, kOutputBus, &desc, size);
 	XThrowIfError(err, "Couldn't set the stream format on the output unit's input scope");
-	
-	printf("Output format: "); desc.Print();
 
 	mPlayerDescription = new AudioStreamBasicDescription;
 	memcpy(mPlayerDescription, &desc, sizeof(AudioStreamBasicDescription));
