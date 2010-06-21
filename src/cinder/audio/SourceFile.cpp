@@ -71,17 +71,8 @@ LoaderSourceFile::LoaderSourceFile( SourceFile *source, Target *target )
 		   
 	//right now this always converts to linear PCM --that's probably ok
 	
-	targetDescription.mSampleRate		= 44100.0f;
-	targetDescription.mFormatID			= kAudioFormatLinearPCM; //target->mNativeFormatId;
-	targetDescription.mFormatFlags		= kAudioFormatFlagsCanonical;
-//	targetDescription.mFormatFlags = CalculateLPCMFlags( target->getBitsPerSample(), target->getBlockAlign() * 8, target->isFloat(), target->isBigEndian(), ( ! target->isInterleaved() ) ); //target->mNativeFormatFlags
-	targetDescription.mBitsPerChannel	= 16;
-	targetDescription.mChannelsPerFrame	= source->getChannelCount();
-	targetDescription.mFramesPerPacket	= 1;
-	targetDescription.mBytesPerFrame	= (targetDescription.mBitsPerChannel / 8) * targetDescription.mChannelsPerFrame;
-	targetDescription.mBytesPerPacket	= targetDescription.mBytesPerFrame * targetDescription.mFramesPerPacket;
-	
-/*
+#if defined(CINDER_MAC)	
+	targetDescription.mFormatID = kAudioFormatLinearPCM; //target->mNativeFormatId;
 	targetDescription.mFormatFlags = CalculateLPCMFlags( target->getBitsPerSample(), target->getBlockAlign() * 8, target->isFloat(), target->isBigEndian(), ( ! target->isInterleaved() ) ); //target->mNativeFormatFlags
 	targetDescription.mSampleRate = target->getSampleRate();
 	targetDescription.mBytesPerPacket =  ( mSource->getBitsPerSample() * mSource->getChannelCount() ) / 8; //target->mBytesPerPacket;
@@ -89,7 +80,18 @@ LoaderSourceFile::LoaderSourceFile( SourceFile *source, Target *target )
 	targetDescription.mBytesPerFrame = ( mSource->getBlockAlign() ); //target->mBytesPerFrame;
 	targetDescription.mChannelsPerFrame = target->getChannelCount();
 	targetDescription.mBitsPerChannel = target->getBitsPerSample();
-*/	
+	
+#elif defined (CINDER_COCOA) && !defined(CINDER_MAC)
+	targetDescription.mSampleRate		= 44100.0f;
+	targetDescription.mFormatID			= kAudioFormatLinearPCM; //target->mNativeFormatId;
+	targetDescription.mFormatFlags		= kAudioFormatFlagsCanonical;
+	targetDescription.mBitsPerChannel	= 16;
+	targetDescription.mChannelsPerFrame	= source->getChannelCount();
+	targetDescription.mFramesPerPacket	= 1;
+	targetDescription.mBytesPerFrame	= (targetDescription.mBitsPerChannel / 8) * targetDescription.mChannelsPerFrame;
+	targetDescription.mBytesPerPacket	= targetDescription.mBytesPerFrame * targetDescription.mFramesPerPacket;
+#endif	
+
 	printf("Okay, we've done the target description\n");
 	
 	mConverter = shared_ptr<CocoaCaConverter>( new CocoaCaConverter( this, &LoaderSourceFile::dataInputCallback, sourceDescription, targetDescription, mSource->mMaxPacketSize ) );

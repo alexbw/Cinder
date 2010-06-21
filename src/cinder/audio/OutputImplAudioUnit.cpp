@@ -330,10 +330,6 @@ OutputImplAudioUnit::OutputImplAudioUnit()
 	if( err ) {
 		//throw
 	}
-
-	
-	
-	
 	
 	
 #elif defined(CINDER_COCOA) && !defined(CINDER_MAC) 
