@@ -54,7 +54,9 @@ class OutputImplAudioUnit;
 
 class TargetOutputImplAudioUnit : public Target {
   public: 
-	static shared_ptr<TargetOutputImplAudioUnit> createRef( const OutputImplAudioUnit *aOutput ){ return shared_ptr<TargetOutputImplAudioUnit>( new TargetOutputImplAudioUnit( aOutput ) );  };
+	static shared_ptr<TargetOutputImplAudioUnit> createRef( const OutputImplAudioUnit *aOutput ){ 
+		return shared_ptr<TargetOutputImplAudioUnit>( new TargetOutputImplAudioUnit( aOutput ) );  
+	};
 	~TargetOutputImplAudioUnit() {}
   private:
 	TargetOutputImplAudioUnit( const OutputImplAudioUnit *aOutput );

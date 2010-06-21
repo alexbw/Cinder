@@ -29,7 +29,7 @@
 namespace cinder { namespace audio {
 
 TargetOutputImplAudioUnit::TargetOutputImplAudioUnit( const OutputImplAudioUnit *aOutput ) {
-		loadFromCaAudioStreamBasicDescription( this, aOutput->mPlayerDescription );
+	loadFromCaAudioStreamBasicDescription( this, aOutput->mPlayerDescription );
 }
 
 OutputImplAudioUnit::Track::Track( SourceRef source, OutputImplAudioUnit * output )
@@ -37,7 +37,9 @@ OutputImplAudioUnit::Track::Track( SourceRef source, OutputImplAudioUnit * outpu
 {
 	mTarget = TargetOutputImplAudioUnit::createRef( output );
 	mLoader = source->createLoader( mTarget.get() );
-	mInputBus = output->availableTrackId();
+//	printf("What's the volume? %f\n", output->getVolume());
+//	printf("Available track ID: %d\n",output->availableTrackId());
+//	mInputBus = output->availableTrackId();
 }
 
 OutputImplAudioUnit::Track::~Track() 
@@ -306,7 +308,7 @@ OutputImplAudioUnit::~OutputImplAudioUnit()
 }
 
 TrackRef OutputImplAudioUnit::addTrack( SourceRef aSource, bool autoplay )
-{
+{	
 	shared_ptr<OutputImplAudioUnit::Track> track = shared_ptr<OutputImplAudioUnit::Track>( new OutputImplAudioUnit::Track( aSource, this ) );
 	TrackId inputBus = track->getTrackId();
 	mTracks.insert( std::pair<TrackId,shared_ptr<OutputImplAudioUnit::Track> >( inputBus, track ) );

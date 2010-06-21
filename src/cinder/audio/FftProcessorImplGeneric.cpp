@@ -64,9 +64,7 @@ shared_ptr<float> FftProcessorImplGeneric::process( const float * inData )
 	for (int i=0; i<mBandCount; ++i) {
 		outData[i] = (float)sqrt(holdingBuffer[i*2]*holdingBuffer[i*2] + holdingBuffer[i*2+1]*holdingBuffer[i*2+1]);
 	}
-	
-	printf("What's in the 10th freq bin? %f\n", outData[9]);
-		
+			
 	return shared_ptr<float>( outData );;
 }
 

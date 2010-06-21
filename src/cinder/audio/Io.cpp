@@ -49,6 +49,10 @@ SourceRef load( DataSourceRef dataSource, std::string extension )
 #if defined(CINDER_COCOA)
 void Io::loadFromCaAudioStreamBasicDescription( Io * anIo, const AudioStreamBasicDescription * nativeFormatDescription )
 {
+
+	const AudioStreamBasicDescription *nd = nativeFormatDescription;
+		   
+		   
 	anIo->mSampleRate = nativeFormatDescription->mSampleRate;
 	anIo->mNativeFormatId = nativeFormatDescription->mFormatID;
 	anIo->mNativeFormatFlags = nativeFormatDescription->mFormatFlags;

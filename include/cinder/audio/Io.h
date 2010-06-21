@@ -34,6 +34,7 @@
 #elif defined(CINDER_COCOA)
 	#include <AudioToolbox/AudioToolbox.h>
 	#include <AudioUnit/AudioUnit.h>
+	#include <AudioToolbox/AudioFile.h>
 #elif defined(CINDER_MSW)
 	#include <windows.h>
 	#include <mmsystem.h> 

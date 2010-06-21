@@ -46,6 +46,7 @@ LoaderSourceFileRef	LoaderSourceFile::createRef( SourceFile *source, Target *tar
 LoaderSourceFile::LoaderSourceFile( SourceFile *source, Target *target )
 	: mSource( source ), mPacketOffset( 0 )
 {
+	
 	AudioStreamBasicDescription sourceDescription;
 	
 	sourceDescription.mFormatID = source->mNativeFormatId; //kAudioFormatLinearPCM;
@@ -56,13 +57,14 @@ LoaderSourceFile::LoaderSourceFile( SourceFile *source, Target *target )
 	sourceDescription.mBytesPerFrame = source->mBytesPerFrame; //( mSource->getBitsPerSample() * mSource->getChannelCount() ) / 8;
 	sourceDescription.mChannelsPerFrame = source->getChannelCount();
 	sourceDescription.mBitsPerChannel = source->getBitsPerSample();
-	
+		
 	AudioStreamBasicDescription targetDescription;
 	
 	if( ! target->isPcm() ) {
 		throw IoExceptionUnsupportedDataFormat();
 	}
 	
+
 	//right now this always converts to linear PCM --that's probably ok
 	targetDescription.mFormatID = kAudioFormatLinearPCM; //target->mNativeFormatId;
 	targetDescription.mFormatFlags = CalculateLPCMFlags( target->getBitsPerSample(), target->getBlockAlign() * 8, target->isFloat(), target->isBigEndian(), ( ! target->isInterleaved() ) ); //target->mNativeFormatFlags
@@ -74,6 +76,7 @@ LoaderSourceFile::LoaderSourceFile( SourceFile *source, Target *target )
 	targetDescription.mBitsPerChannel = target->getBitsPerSample();
 	
 	mConverter = shared_ptr<CocoaCaConverter>( new CocoaCaConverter( this, &LoaderSourceFile::dataInputCallback, sourceDescription, targetDescription, mSource->mMaxPacketSize ) );
+
 }
 
 uint64_t LoaderSourceFile::getSampleOffset() const { 
@@ -137,6 +140,7 @@ void SourceFile::registerSelf()
 				while( ! res && extLen < 5 ) {
 					ext = new char[extLen];
 					res = CFStringGetCString( cfext, ext, extLen * sizeof(char), kCFStringEncodingASCII );
+					std::cout << ext << std::endl;
 					if( res ) {
 						IoRegistrar::registerSourceType( ext, sourceFunc, SOURCE_PRIORITY );
 					}
@@ -147,8 +151,8 @@ void SourceFile::registerSelf()
 			}
 		}		
 	}
-	free(audioTypes);
 	
+	free(audioTypes);
 	IoRegistrar::registerSourceGeneric( sourceFunc, SOURCE_PRIORITY );
 	
 }
@@ -192,8 +196,8 @@ SourceFile::SourceFile( DataSourceRef dataSourceRef )
 	if( err ) {
 		throw IoExceptionFailedLoad();
 	}
-	
-	loadFromCaAudioStreamBasicDescription( this, &nativeFormatDescription );
+
+	loadFromCaAudioStreamBasicDescription( this, &nativeFormatDescription );	
 	
 	size = sizeof( uint64_t );
 	err = AudioFileGetProperty( aFileRef, kAudioFilePropertyAudioDataPacketCount, &size, &mPacketCount );
