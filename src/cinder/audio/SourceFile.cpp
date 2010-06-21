@@ -76,8 +76,8 @@ LoaderSourceFile::LoaderSourceFile( SourceFile *source, Target *target )
 	targetDescription.mFormatFlags		= kAudioFormatFlagsCanonical;
 //	targetDescription.mFormatFlags = CalculateLPCMFlags( target->getBitsPerSample(), target->getBlockAlign() * 8, target->isFloat(), target->isBigEndian(), ( ! target->isInterleaved() ) ); //target->mNativeFormatFlags
 	targetDescription.mBitsPerChannel	= 16;
-	targetDescription.mChannelsPerFrame	= 1;
-	targetDescription.mFramesPerPacket	= 1;	
+	targetDescription.mChannelsPerFrame	= source->getChannelCount();
+	targetDescription.mFramesPerPacket	= 1;
 	targetDescription.mBytesPerFrame	= (targetDescription.mBitsPerChannel / 8) * targetDescription.mChannelsPerFrame;
 	targetDescription.mBytesPerPacket	= targetDescription.mBytesPerFrame * targetDescription.mFramesPerPacket;
 	

@@ -64,21 +64,20 @@ void OutputImplAudioUnit::Track::play()
 	AURenderCallbackStruct rcbs;
 	rcbs.inputProc = &OutputImplAudioUnit::Track::renderCallback;
 	rcbs.inputProcRefCon = (void *)this;
-#if defined(CINDER_MAC)
-	OSStatus err = AudioUnitSetProperty( mOutput->mMixerUnit, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input, mInputBus, &rcbs, sizeof(rcbs) );
+//#if defined(CINDER_MAC)
+	OSStatus err = AudioUnitSetProperty( mOutput->mMixerUnit, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input, kOutputBus, &rcbs, sizeof(rcbs) );
 	XThrowIfError(err, "Couldn't setup the callback on the mixer unit");	
-#elif defined(CINDER_COCOA) && !defined(CINDER_MAC)
-	UInt32 numbuses = 1;
-	UInt32 size = sizeof(UInt32);
-	AudioUnitGetProperty(mOutput->mMixerUnit, kAudioUnitProperty_ElementCount, kAudioUnitScope_Input, 0, &numbuses, &size);
-	OSStatus err;
-	for (int i=0; i < numbuses; ++i) 
-	{
-//		err = AUGraphSetNodeInputCallback(mOutput->mGraph, mOutput->mMixerNode, i, &rcbs);	
-		err = AudioUnitSetProperty(mOutput->mMixerUnit, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input, i, &rcbs, sizeof(rcbs));
-		XThrowIfError(err, "Couldn't set up the callback on the mixer unit");
-	}
-#endif
+//#elif defined(CINDER_COCOA) && !defined(CINDER_MAC)
+//	UInt32 numbuses = 1;
+//	UInt32 size = sizeof(UInt32);
+//	AudioUnitGetProperty(mOutput->mMixerUnit, kAudioUnitProperty_ElementCount, kAudioUnitScope_Input, 0, &numbuses, &size);
+//	OSStatus err;
+//	for (int i=0; i < numbuses; ++i) 
+//	{
+//		err = AudioUnitSetProperty(mOutput->mMixerUnit, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input, i, &rcbs, sizeof(rcbs));
+//		XThrowIfError(err, "Couldn't set up the callback on the mixer unit");
+//	}
+//#endif
 	
 	if( err ) {
 		//throw
@@ -140,13 +139,12 @@ PcmBuffer32fRef OutputImplAudioUnit::Track::getPcmBuffer()
 OSStatus OutputImplAudioUnit::Track::renderCallback( void * audioTrack, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData)
 {	
 	
-	printf("We are in the callback\n");
-	
 	OSStatus err = noErr;
 	
 	OutputImplAudioUnit::Track *theTrack = reinterpret_cast<OutputImplAudioUnit::Track *>( audioTrack );
 	LoaderRef theLoader = theTrack->mLoader;
 	
+	printf("How many buffers? %d\n", ioData->mNumberBuffers);
 	
 	if( ! theTrack->mIsPlaying ) {		
 		for( int i = 0; i < ioData->mNumberBuffers; i++ ) {
@@ -201,32 +199,10 @@ OSStatus OutputImplAudioUnit::Track::renderCallback( void * audioTrack, AudioUni
 		}
 		
 		
-		printf("Okay, here we are\n");
-		
-#if defined(CINDER_MAC)
-		printf("What the fuuuuuuck\n");
 		for( int i = 0; i < ioData->mNumberBuffers; i++ ) {
 			//TODO: implement channel map to better deal with channel locations
 			theTrack->mLoadingPcmBuffer->appendChannelData( reinterpret_cast<float *>( ioData->mBuffers[i].mData ), ioData->mBuffers[0].mDataByteSize / sizeof(float), static_cast<ChannelIdentifier>( i ) );
 		}
-	
-#elif defined(CINDER_COCOA) && !defined(CINDER_MAC)
-		printf("YES let's get some samples\n");
-		for( int i = 0; i < ioData->mNumberBuffers; i++ ) {
-			//TODO: implement channel map to better deal with channel locations
-			// ABW: We have to convert out from SInt16's to floats for the iPhone. It's nigh impossible to get floats out of the iPhone mic
-			
-			int numSamples = ioData->mBuffers[0].mDataByteSize / sizeof(float);
-			float *properTypeBuffer = new float[numSamples];
-			SInt16 *originalTypeBuffer = (SInt16 *)ioData->mBuffers[i].mData;
-			for (int j=0; j < numSamples; ++j)
-				properTypeBuffer[j] = (float)originalTypeBuffer[j];
-			
-			theTrack->mLoadingPcmBuffer->appendChannelData( properTypeBuffer, numSamples, static_cast<ChannelIdentifier>( i ) );
-			
-			delete [] properTypeBuffer;
-		}
-#endif
 	}
 
 	
@@ -421,10 +397,10 @@ OutputImplAudioUnit::OutputImplAudioUnit()
 		desc.mFormatID			= kAudioFormatLinearPCM;
 		desc.mFormatFlags		= kAudioFormatFlagsCanonical;
 		desc.mBitsPerChannel	= 16;
-		desc.mChannelsPerFrame	= 1;
+		desc.mChannelsPerFrame	= 2;
 		desc.mFramesPerPacket	= 1;
-		desc.mBytesPerFrame		= 2;
-		desc.mBytesPerPacket	= 2;
+		desc.mBytesPerFrame		= (desc.mBitsPerChannel/8)*desc.mChannelsPerFrame;
+		desc.mBytesPerPacket	= desc.mBytesPerFrame * desc.mFramesPerPacket;
 
 		printf("I am now all the way over here\n");
 		
@@ -441,13 +417,13 @@ OutputImplAudioUnit::OutputImplAudioUnit()
 	err = AudioUnitSetProperty(mOutputUnit, kAudioOutputUnitProperty_EnableIO, kAudioUnitScope_Output, kOutputBus, &one, sizeof(one));
 	XThrowIfError(err, "Couldn't enable IO on the output scope of the IO unit");
 
-	size = sizeof(desc);
-	err = AudioUnitGetProperty(mOutputUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, kInputBus, &desc, &size);
-	XThrowIfError(err, "Couldn't get the stream format on the output unit's output scope");
-	
-	memset(&desc, 0, sizeof(desc));
-	desc.SetAUCanonical(numbuses, true);
-	desc.mSampleRate = 44100.0f;	
+//	size = sizeof(desc);
+//	err = AudioUnitGetProperty(mOutputUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, kInputBus, &desc, &size);
+//	XThrowIfError(err, "Couldn't get the stream format on the output unit's output scope");
+//	
+//	memset(&desc, 0, sizeof(desc));
+//	desc.SetAUCanonical(2, true);
+//	desc.mSampleRate = 44100.0f;	
 	err = AudioUnitSetProperty(mOutputUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, kInputBus, &desc, size);
 	XThrowIfError(err, "Couldn't set the stream format on the output unit's output scope");
 	err = AudioUnitSetProperty(mOutputUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, kOutputBus, &desc, size);
