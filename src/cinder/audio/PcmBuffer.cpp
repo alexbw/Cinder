@@ -131,6 +131,7 @@ shared_ptr<BufferT<T> > PcmBufferT<T>::getChannelData( ChannelIdentifier channel
 		buffer->mNumberChannels = 1;
 		buffer->mDataByteSize = mMaxSampleCount * sizeof( T );
 		buffer->mSampleCount = mBufferSampleCounts[channelId];
+
 		return buffer;
 	}
 	
@@ -153,6 +154,7 @@ shared_ptr<BufferT<T> > PcmBufferT<T>::getInterleavedData() const {
 		buffer->mSampleCount = mBufferSampleCounts[0];
 		return buffer;
 	}
+	
 	return mBuffers[0];
 }
 
@@ -182,6 +184,7 @@ void PcmBufferT<T>::appendInterleavedData( T * aData, uint32_t aSampleCount )
 template<typename T>
 void PcmBufferT<T>::appendChannelData( T * aData, uint32_t aSampleCount, ChannelIdentifier channelId )
 {
+	
 	if( mBufferSampleCounts[channelId] + aSampleCount > mMaxSampleCount ) {
 		throw OutOfRangePcmBufferException();
 	}

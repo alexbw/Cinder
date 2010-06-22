@@ -22,7 +22,6 @@
 		C7BAB3CA11A646ED0071BA15 /* drums.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C7BAB3C811A646ED0071BA15 /* drums.mp3 */; };
 		C7BAB3CB11A646ED0071BA15 /* guitar.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C7BAB3C911A646ED0071BA15 /* guitar.mp3 */; };
 		FA732D6111C427F500433563 /* ttv.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FA732D6011C427F500433563 /* ttv.mp3 */; };
-		FA732E4211C4359E00433563 /* prefuse.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FA732E4111C4359E00433563 /* prefuse.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,7 +47,6 @@
 		C7BAB3C811A646ED0071BA15 /* drums.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = drums.mp3; path = ../resources/drums.mp3; sourceTree = SOURCE_ROOT; };
 		C7BAB3C911A646ED0071BA15 /* guitar.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = guitar.mp3; path = ../resources/guitar.mp3; sourceTree = SOURCE_ROOT; };
 		FA732D6011C427F500433563 /* ttv.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = ttv.mp3; path = ../resources/ttv.mp3; sourceTree = SOURCE_ROOT; };
-		FA732E4111C4359E00433563 /* prefuse.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = prefuse.mp3; path = ../resources/prefuse.mp3; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,7 +138,6 @@
 			isa = PBXGroup;
 			children = (
 				C7BAB3C811A646ED0071BA15 /* drums.mp3 */,
-				FA732E4111C4359E00433563 /* prefuse.mp3 */,
 				C7BAB3C911A646ED0071BA15 /* guitar.mp3 */,
 				FA732D6011C427F500433563 /* ttv.mp3 */,
 				8D1107310486CEB800E47090 /* Info.plist */,
@@ -205,7 +202,6 @@
 				C7BAB3CA11A646ED0071BA15 /* drums.mp3 in Resources */,
 				C7BAB3CB11A646ED0071BA15 /* guitar.mp3 in Resources */,
 				FA732D6111C427F500433563 /* ttv.mp3 in Resources */,
-				FA732E4211C4359E00433563 /* prefuse.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,7 +223,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
-				CINDER_PATH = /Users/alex/Code/Cinder_audio;
+				CINDER_PATH = /Users/alex/Code/Cinder_dev;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;

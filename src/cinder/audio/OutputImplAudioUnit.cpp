@@ -143,9 +143,7 @@ OSStatus OutputImplAudioUnit::Track::renderCallback( void * audioTrack, AudioUni
 	
 	OutputImplAudioUnit::Track *theTrack = reinterpret_cast<OutputImplAudioUnit::Track *>( audioTrack );
 	LoaderRef theLoader = theTrack->mLoader;
-	
-	printf("How many buffers? %d\n", ioData->mNumberBuffers);
-	
+		
 	if( ! theTrack->mIsPlaying ) {		
 		for( int i = 0; i < ioData->mNumberBuffers; i++ ) {
 			 memset( ioData->mBuffers[i].mData, 0, ioData->mBuffers[i].mDataByteSize );
@@ -174,9 +172,7 @@ OSStatus OutputImplAudioUnit::Track::renderCallback( void * audioTrack, AudioUni
 		delete [] bufferList.mBuffers;
 		
 	}
-	
-	printf("We have loaded stuff for the playing\n");
-	
+			
 	//save data into pcm buffer if it's enabled
 	/*if( theTrack->mPCMBufferEnabled ) {
 		if( theTrack->mPCMBuffer.mSampleIdx + ( ioData->mBuffers[0].mDataByteSize / sizeof(Float32) ) > theTrack->mPCMBuffer.mSamplesPerBuffer ) {
@@ -190,18 +186,30 @@ OSStatus OutputImplAudioUnit::Track::renderCallback( void * audioTrack, AudioUni
 	}*/
 	
 	//add data to the PCM buffer if it's enabled
-	if( theTrack->mIsPcmBuffering ) {
-		if( ! theTrack->mLoadingPcmBuffer || ( theTrack->mLoadingPcmBuffer->getSampleCount() + ( ioData->mBuffers[0].mDataByteSize / sizeof(float) ) > theTrack->mLoadingPcmBuffer->getMaxSampleCount() ) ) {
+	if( theTrack->mIsPcmBuffering ) {					
+		
+		if( ! theTrack->mLoadingPcmBuffer || ( theTrack->mLoadingPcmBuffer->getSampleCount() + ( ioData->mBuffers[0].mDataByteSize / sizeof(float) ) > theTrack->mLoadingPcmBuffer->getMaxSampleCount() ) )
+		{
 			boost::mutex::scoped_lock lock( theTrack->mPcmBufferMutex );
 			uint32_t bufferSampleCount = 1470; //TODO: make this settable, 1470 ~= 44100(samples/sec)/30(frmaes/second)
 			theTrack->mLoadedPcmBuffer = theTrack->mLoadingPcmBuffer;
 			theTrack->mLoadingPcmBuffer = PcmBuffer32fRef( new PcmBuffer32f( bufferSampleCount, theTrack->mTarget->getChannelCount(), theTrack->mTarget->isInterleaved() ) );
 		}
 		
-		
 		for( int i = 0; i < ioData->mNumberBuffers; i++ ) {
+		#if defined(CINDER_COCOA) && !defined(CINDER_MAC)
+			// If we're on the iPhone, we need to translate SInt16's to floats
+			SInt16 *originalData = (SInt16 *)ioData->mBuffers[i].mData;
+			float  *newData		 = new float[inNumberFrames];
+			for (int j=0; j < inNumberFrames; ++j)
+				newData[j] = (float)originalData[j];
+			theTrack->mLoadingPcmBuffer->appendChannelData( newData, inNumberFrames, static_cast<ChannelIdentifier>( i ) );
+			delete [] newData;
+		#else
 			//TODO: implement channel map to better deal with channel locations
-			theTrack->mLoadingPcmBuffer->appendChannelData( reinterpret_cast<float *>( ioData->mBuffers[i].mData ), ioData->mBuffers[0].mDataByteSize / sizeof(float), static_cast<ChannelIdentifier>( i ) );
+			theTrack->mLoadingPcmBuffer->appendChannelData( reinterpret_cast<float *>( ioData->mBuffers[i].mData ), inNumberFrames, static_cast<ChannelIdentifier>( i ) );
+		#endif
+
 		}
 	}
 
@@ -379,13 +387,11 @@ OutputImplAudioUnit::OutputImplAudioUnit()
 	err = AudioUnitSetProperty(mMixerUnit, kAudioUnitProperty_ElementCount, kAudioUnitScope_Input, 0, &numbuses, sizeof(UInt32));
 	XThrowIfError(err, "Couldn't set buses on the mixer");	
 
-	printf("I am here\n");
 	
 	CAStreamBasicDescription desc;
 	UInt32 size = sizeof(desc);
 	for (int i=0; i < numbuses; ++i) 
 	{
-		printf("I am there\n");
 		
 		err = AudioUnitGetProperty(mMixerUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, i, &desc, &size);
 		memset(&desc, 0, size);
@@ -393,21 +399,17 @@ OutputImplAudioUnit::OutputImplAudioUnit()
 		// on the iPhone, we have to be explicit with our AudioStreamBasicDescription
 		desc.mSampleRate		= 44100.0f; // TODO: hardwired sample rate, not smart.
 		desc.mFormatID			= kAudioFormatLinearPCM;
-		desc.mFormatFlags		= kAudioFormatFlagsCanonical;
+		desc.mFormatFlags		= CalculateLPCMFlags( 16, 16, false, false, false );
 		desc.mBitsPerChannel	= 16;
 		desc.mChannelsPerFrame	= 2;
 		desc.mFramesPerPacket	= 1;
 		desc.mBytesPerFrame		= (desc.mBitsPerChannel/8)*desc.mChannelsPerFrame;
 		desc.mBytesPerPacket	= desc.mBytesPerFrame * desc.mFramesPerPacket;
-
-		printf("I am now all the way over here\n");
 		
 		err = AudioUnitSetProperty(mMixerUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, i, &desc, size);
 		XThrowIfError(err, "Couldn't set the stream description on the mixer's input bus");
 		
 	}
-	
-	printf("And now I'm here\n");
 
 	UInt32 one = 1;
 	err = AudioUnitSetProperty(mOutputUnit, kAudioOutputUnitProperty_EnableIO, kAudioUnitScope_Input, kInputBus, &one, sizeof(one));

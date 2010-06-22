@@ -71,6 +71,9 @@ void Io::loadFromCaAudioStreamBasicDescription( Io * anIo, const AudioStreamBasi
 		anIo->mBlockAlign = anIo->mBytesPerFrame;
 		anIo->mIsBigEndian = nativeFormatDescription->mFormatFlags & kAudioFormatFlagIsBigEndian;
 		anIo->mIsInterleaved = ! ( nativeFormatDescription->mFormatFlags & kAudioFormatFlagIsNonInterleaved );
+	#if defined(CINDER_COCOA) && !defined(CINDER_MAC)
+		anIo->mIsInterleaved = false;
+	#endif
 		if( ( nativeFormatDescription->mFormatFlags & kAudioFormatFlagIsFloat ) && anIo->mBitsPerSample == 32 ) {
 			anIo->mDataType = FLOAT32;
 		} else if( ( nativeFormatDescription->mFormatFlags & kAudioFormatFlagIsSignedInteger ) ) {

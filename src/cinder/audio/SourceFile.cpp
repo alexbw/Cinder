@@ -80,15 +80,14 @@ LoaderSourceFile::LoaderSourceFile( SourceFile *source, Target *target )
 #elif defined (CINDER_COCOA) && !defined(CINDER_MAC)
 	targetDescription.mSampleRate		= 44100.0f;
 	targetDescription.mFormatID			= kAudioFormatLinearPCM; //target->mNativeFormatId;
-	targetDescription.mFormatFlags		= kAudioFormatFlagsCanonical;
+	targetDescription.mFormatFlags		= CalculateLPCMFlags( 16, 16, false, false, false );
 	targetDescription.mBitsPerChannel	= 16;
 	targetDescription.mChannelsPerFrame	= source->getChannelCount();
 	targetDescription.mFramesPerPacket	= 1;
 	targetDescription.mBytesPerFrame	= (targetDescription.mBitsPerChannel / 8) * targetDescription.mChannelsPerFrame;
 	targetDescription.mBytesPerPacket	= targetDescription.mBytesPerFrame * targetDescription.mFramesPerPacket;
 #endif	
-
-	
+		
 	mConverter = shared_ptr<CocoaCaConverter>( new CocoaCaConverter( this, &LoaderSourceFile::dataInputCallback, sourceDescription, targetDescription, mSource->mMaxPacketSize ) );
 }
 

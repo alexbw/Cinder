@@ -30,7 +30,7 @@
 #elif defined( CINDER_MAC )
 	#include "cinder/audio/FftProcessorImplAccelerate.h" // TODO: change back to accelerate
 	typedef cinder::audio::FftProcessorImplAccelerate	FftProcessorPlatformImpl;
-#elif defined( CINDER_COCOA )
+#elif defined( CINDER_COCOA ) && !defined( CINDER_MAC )
 	#include "cinder/audio/FftProcessorImplGeneric.h"
 	typedef cinder::audio::FftProcessorImplGeneric	FftProcessorPlatformImpl;
 #endif
@@ -40,34 +40,25 @@ namespace cinder { namespace audio {
 shared_ptr<float> calculateFft( Buffer32fRef aBuffer, uint16_t aBandCount ) 
 {
 	
+	
+	
 	if( ! aBuffer || ( aBuffer->mSampleCount < aBandCount * 2 ) ) {
-		//TODO: throw
+		
 		return shared_ptr<float>();
 	}
 	
+	printf("We're going to rock and roll!\n");
 	static FftProcessorRef processor = FftProcessor::createRef( kDefaultBandCount );
 	if ( aBandCount != processor->getBandCount() )
 	{
 		processor = FftProcessor::createRef( aBandCount );
 	}
 	
-
-	
 	return processor->process( &( aBuffer->mData[ aBuffer->mSampleCount - ( aBandCount * 2 ) ] ) );
 	
 }
-	
-//shared_ptr<float> calculateFft( Buffer32fRef aBuffer, uint16_t aBandCount )
-//{
-//	if( ! aBuffer || ( aBuffer->mSampleCount < aBandCount * 2 ) ) {
-//		//TODO: throw
-//		return shared_ptr<float>();
-//	}
-//
-//	FftProcessorRef processor = FftProcessor::createRef( aBandCount );
-//	return processor->process( &( aBuffer->mData[ aBuffer->mSampleCount - ( aBandCount * 2 ) ] ) );
-//}
 
+	
 FftProcessorImpl::FftProcessorImpl( uint16_t aBandCount )
 	: mBandCount( aBandCount )
 {

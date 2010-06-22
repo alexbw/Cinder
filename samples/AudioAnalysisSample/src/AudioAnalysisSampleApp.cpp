@@ -155,8 +155,6 @@ void AudioAnalysisSampleApp::drawFft( audio::TrackRef track )
 	
 	float * fftDisplayBuffer = welch->getFft();
 	
-// float *fftDisplayBuffer = fftRef.get();
-	
 	for( int i = 0; i < ( kBandCount ); i++ ) {
 		float barY = 10.0f*kFFTHistory*fftDisplayBuffer[i] / kBandCount * ht;
 		glBegin( GL_QUADS );
